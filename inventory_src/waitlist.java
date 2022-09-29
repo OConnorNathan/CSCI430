@@ -23,7 +23,7 @@ public class Waitlist implements Serializable{
     private static Waitlist waitlist;
     private Waitlist(){}
 
-    public static Waitlist isntance(){
+    public static Waitlist instance(){
         if (waitlist == null){
             return (waitlist = new Waitlist());
         } else {
@@ -35,9 +35,22 @@ public class Waitlist implements Serializable{
         waits.add(wait);
         return true;
     }
-    public Iterator getBooks(){
+
+    public boolean fulfillWait(Wait wait){
+      int i = waits.indexOf(wait);
+      if (i != -1){
+        waits.remove(i);
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+
+    public Iterator getWaits(){
         return waits.iterator();
     }
+
     private void writeObject(java.io.ObjectOutputStream output){
         try {
             output.defaultWriteObject();
@@ -46,6 +59,7 @@ public class Waitlist implements Serializable{
             System.out.println(ioe);
           }
     }
+
     private void readObject(java.io.ObjectInputStream input) {
         try {
           if (waitlist != null) {
