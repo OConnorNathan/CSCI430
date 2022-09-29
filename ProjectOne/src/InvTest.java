@@ -3,15 +3,17 @@
  * 
  * 
  **************************************/
-
+package ProjectOne.src;
 
 public class invTest{
     private Inventory inventory;
 
+    invTest(Inventory inventory){
+        this.inventory = inventory;
+    }
 
+    boolean runTest(){
 
-
-    invTest(Inventory inventory)
-
-
+        return true;
+    }
 }
