@@ -1,4 +1,6 @@
 
+package ProjectOne.src;
+
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,5 +43,9 @@ public class Invoice{
 
     public void setWishlist(List<Wish> wishlist) {
         this.wishlist = wishlist;
+    }
+
+    public String toString(){
+        
     }
 }

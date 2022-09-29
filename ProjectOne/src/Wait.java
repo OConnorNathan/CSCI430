@@ -10,8 +10,8 @@
  * Based On: Book.java by Dr. Ramnath Sarnath
  * 
  *******************************************************************/
+package ProjectOne.src;
 
-package inventory_src;
 
 import java.util.*;
 import java.lang.*;

@@ -1,4 +1,6 @@
 
+package ProjectOne.src;
+
 import java.io.*;
 import java.util.*;
 public class Client implements Serializable {
@@ -12,7 +14,7 @@ public class Client implements Serializable {
   public  Client (String name, String address) {
     this.name = name;
     this.address = address;
-    this.cid = (ClientIdServer.instance()).getId();
+    this.cid = ClientIdServer.instance().getId();
   }
   public String getName() {
     return name;

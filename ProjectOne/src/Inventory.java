@@ -11,7 +11,7 @@
  * 
  *******************************************************************/
 
-package inventory_src;
+package ProjectOne.src;
 
 import java.util.*;
 import java.lang.*;

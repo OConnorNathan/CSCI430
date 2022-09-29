@@ -1,3 +1,5 @@
+package ProjectOne.src;
+
 
 public class Wish {
     private int pid;

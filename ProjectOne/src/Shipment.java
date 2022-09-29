@@ -1,3 +1,5 @@
+package ProjectOne.src;
+
 import java.io.*;
 
 public class Shipment implements Serializable {
