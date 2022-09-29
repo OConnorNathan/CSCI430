@@ -1,0 +1,71 @@
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, Inventory implementation
+ * File: Waitlist.java
+ * 
+ * Author: Jacob Haapoja
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Catalog.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
+
+package inventory_src;
+
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+public class Waitlist implements Serializable{
+    private static final long serialVersionUID = 1L;
+    private LinkedList<Wait> waits= new LinkedList<Wait>();
+    private static Waitlist waitlist;
+    private Waitlist(){}
+
+    public static Waitlist isntance(){
+        if (waitlist == null){
+            return (waitlist = new Waitlist());
+        } else {
+            return waitlist;
+        }
+    }
+
+    public boolean insertWait(Wait wait){
+        waits.add(wait);
+        return true;
+    }
+    public Iterator getBooks(){
+        return waits.iterator();
+    }
+    private void writeObject(java.io.ObjectOutputStream output){
+        try {
+            output.defaultWriteObject();
+            output.writeObject(waitlist);
+          } catch(IOException ioe) {
+            System.out.println(ioe);
+          }
+    }
+    private void readObject(java.io.ObjectInputStream input) {
+        try {
+          if (waitlist != null) {
+            return;
+          } else {
+            input.defaultReadObject();
+            if (waitlist == null) {
+              waitlist = (Waitlist) input.readObject();
+            } else {
+              input.readObject();
+            }
+          }
+        } catch(IOException ioe) {
+          System.out.println("in Waitlist readObject \n" + ioe);
+        } catch(ClassNotFoundException cnfe) {
+          cnfe.printStackTrace();
+        }
+      }
+      public String toString(){
+        return waits.toString();
+      }
+}
+
