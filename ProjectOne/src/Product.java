@@ -11,7 +11,7 @@
  * 
  *******************************************************************/
 
-
+package ProjectOne.src;
 
 import java.util.*;
 import java.lang.*;
@@ -26,8 +26,8 @@ public class Product implements Serializable {
     private float wholesalePrice;
   
   
-    public Product(int pid, String description, int quantity, float price, float wholesalePrice){
-        this.pid = pid;
+    public Product(String description, int quantity, float price, float wholesalePrice){
+        this.pid = ProductIdServer.instance().getId();
         this.description = description;
         this.quantity = quantity;
         this.price = price;

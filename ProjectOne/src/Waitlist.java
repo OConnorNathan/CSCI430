@@ -11,7 +11,7 @@
  * 
  *******************************************************************/
 
-package inventory_src;
+package ProjectOne.src;
 
 import java.util.*;
 import java.lang.*;
@@ -78,6 +78,7 @@ public class Waitlist implements Serializable{
           cnfe.printStackTrace();
         }
       }
+      
       public String toString(){
         return waits.toString();
       }
