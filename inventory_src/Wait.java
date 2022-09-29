@@ -11,7 +11,7 @@
  * 
  *******************************************************************/
 
-package inventory_src;
+
 
 import java.util.*;
 import java.lang.*;
