@@ -1,20 +1,19 @@
 /*******************************************************************
  * 
- * Project 1: Warehouse, Inventory implementation
+ * Project 1: Warehouse, WaitList implementation
  * File: Waitlist.java
  * 
  * Author: Jacob Haapoja
+ * Group Number: 2
  * Instructor: Dr. Ramnath Sarnath
  * Class: CSCI 430
  * 
  * Based On: Catalog.java by Dr. Ramnath Sarnath
  * 
  *******************************************************************/
-
 package ProjectOne.src;
 
 import java.util.*;
-import java.lang.*;
 import java.io.*;
 
 public class Waitlist implements Serializable{

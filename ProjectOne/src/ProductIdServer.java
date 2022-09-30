@@ -1,9 +1,16 @@
-/**********************************************************************
+/*******************************************************************
  * 
- * Server to generate Product ID's
+ * Project 1: Warehouse, ProdcutIdServer implementation
+ * File: ProductIdServer.java
  * 
  * Author: Jacob Haapoja
- *********************************************************************/
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: MemberIdServer.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 import java.io.*;

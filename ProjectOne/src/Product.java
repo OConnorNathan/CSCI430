@@ -1,20 +1,18 @@
 /*******************************************************************
  * 
- * Project 1: Warehouse, Inventory implementation
+ * Project 1: Warehouse, Product implementation
  * File: Product.java
  * 
  * Author: Jacob Haapoja
+ * Group Number: 2
  * Instructor: Dr. Ramnath Sarnath
  * Class: CSCI 430
  * 
  * Based On: Book.java by Dr. Ramnath Sarnath
  * 
  *******************************************************************/
-
 package ProjectOne.src;
 
-import java.util.*;
-import java.lang.*;
 import java.io.*;
 
 public class Product implements Serializable {

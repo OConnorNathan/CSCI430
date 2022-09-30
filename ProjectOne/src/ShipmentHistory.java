@@ -1,3 +1,16 @@
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, ShipmentHistory implementation
+ * File: ShipmentHistory.java
+ * 
+ * Author: Blake Hoosline
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Catalog.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 import java.time.LocalDateTime;
@@ -7,56 +20,56 @@ import java.io.*;
 
 public class ShipmentHistory implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String id, date;
-    private LinkedList<Shipment> shipmentItems = new LinkedList<Shipment>();
-    transient DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    LocalDateTime now;
+    private LinkedList<Shipment> shipments = new LinkedList<Shipment>();
+    private static ShipmentHistory shipmentList;
 
-    ShipmentHistory(String id, LinkedList<Shipment> shipmentItems) {
-        now = LocalDateTime.now();
-        this.id = id;
-        this.date = dtf.format(now);
-        this.shipmentItems = shipmentItems;
+    private ShipmentHistory(){
     }
 
-    ShipmentHistory(String id) {
-        now = LocalDateTime.now();
-        this.id = id;
-        this.date = dtf.format(now);
+    public static ShipmentHistory instance() {
+        if (shipmentList == null) {
+          return (shipmentList = new ShipmentHistory());
+        } else {
+          return shipmentList;
+        }
     }
 
-    // gets shipment id
-    public String getId() {
-        return id;
+    public boolean insertShipment(Shipment shipment) {
+        shipments.add(shipment);
+        return true;
     }
-
-    // gets shipment date
-    public String getDate() {
-        return date;
+    
+    public Iterator getShipments(){
+         return shipments.iterator();
     }
-
-    // gets shipment products
-    public Iterator getProducts() {
-        return shipmentItems.iterator();
+      
+    private void writeObject(java.io.ObjectOutputStream output) {
+        try {
+          output.defaultWriteObject();
+          output.writeObject(shipmentList);
+        } catch(IOException ioe) {
+          ioe.printStackTrace();
+        }
     }
-
-    // setting shipment id
-    public void setId(String id) {
-        this.id = id;
+    private void readObject(java.io.ObjectInputStream input) {
+        try {
+          if (shipmentList != null) {
+            return;
+          } else {
+            input.defaultReadObject();
+            if (shipmentList == null) {
+              shipmentList = (ShipmentHistory) input.readObject();
+            } else {
+              input.readObject();
+            }
+          }
+        } catch(IOException ioe) {
+          ioe.printStackTrace();
+        } catch(ClassNotFoundException cnfe) {
+          cnfe.printStackTrace();
+        }
     }
-
-    // setting shipment date
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    // set shipment items into shipment
-    public void setShipmentItems(LinkedList<Shipment> shipmentItems) {
-        this.shipmentItems = shipmentItems;
-    }
-
     public String toString() {
-        return "Date: " + date + " ID: " + id + " Shipment Items: " + shipmentItems;
+        return shipments.toString();
     }
-
 }

@@ -1,3 +1,16 @@
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, ShipmentList implementation
+ * File: ShipmentList.java
+ * 
+ * Author: Blake Hoosline
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Catalog.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 import java.util.*;

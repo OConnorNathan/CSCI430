@@ -1,3 +1,16 @@
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, Wish implementation
+ * File: Wish.java
+ * 
+ * Author: Nathan O'Connor
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Book.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 

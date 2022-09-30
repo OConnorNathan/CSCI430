@@ -1,3 +1,16 @@
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, ShipmentIdServer implementation
+ * File: ShipmentIdServer.java
+ * 
+ * Author: Blake Hoosline
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: MemberIdServer.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 import java.io.*;

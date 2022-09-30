@@ -1,3 +1,16 @@
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, WishList implementation
+ * File: WishList.java
+ * 
+ * Author: Nathan O'Connor
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Book.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 import java.io.*;
@@ -27,5 +40,5 @@ public class WishList implements Serializable{
     
     public Iterator getWishs(){
         return wishs.iterator();
-     }
+    }
 }

@@ -1,14 +1,27 @@
-
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, ClientList implementation
+ * File: ClientList.java
+ * 
+ * Author: Nathan O'Connor
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Book.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 import java.util.*;
 import java.io.*;
 public class ClientList implements Serializable {
   private static final long serialVersionUID = 1L;
-  private List clients = new LinkedList();
+  private LinkedList<Client> clients = new LinkedList<Client>();
   private static ClientList clientList;
   private ClientList() {
   }
+
   public static ClientList instance() {
     if (clientList == null) {
       return (clientList = new ClientList());
@@ -16,6 +29,7 @@ public class ClientList implements Serializable {
       return clientList;
     }
   }
+
   public boolean insertClient(Client client) {
     clients.add(client);
     return true;
@@ -33,6 +47,7 @@ public class ClientList implements Serializable {
       ioe.printStackTrace();
     }
   }
+
   private void readObject(java.io.ObjectInputStream input) {
     try {
       if (clientList != null) {
@@ -51,6 +66,7 @@ public class ClientList implements Serializable {
       cnfe.printStackTrace();
     }
   }
+  
   public String toString() {
     return clients.toString();
   }

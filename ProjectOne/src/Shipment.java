@@ -1,54 +1,56 @@
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, Inventory implementation
+ * File: Product.java
+ * 
+ * Author: Jacob Haapoja
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Book.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 import java.io.*;
 
 public class Shipment implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static final String SHIPMENT_STRING = "S";
-    private String id, products, quantity, price;
+    private int shipmentID;
+    private int productID;
+    private int quantity;
+
 
     // constructor
-    Shipment(String products, String quantity, String price) {
-        id = SHIPMENT_STRING + (ShipmentIdServer.instance()).getId();
-        this.products = products;
+    Shipment(int productID, int quantity) {
+        this.shipmentID = (ShipmentIdServer.instance()).getId();
         this.quantity = quantity;
-        this.price = price;
+        this.productID = productID;
     }
 
-    public String getId() {
-        return id;
+    public int getShipmentId() {
+        return shipmentID;
     }
 
-    public String getProducts() {
-        return products;
+    public int getProductID() {
+        return productID;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public String getPrice() {
-        return price;
+    public void setProductId(int id) {
+        this.productID = id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setProducts(String products) {
-        this.products = products;
-    }
-
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
     }
 
     // converting Shipment to string ouput
     public String toString() {
-        return "ID: " + id + " Product Name: " + products + " Quantity: " + quantity + " Price: " + price;
+        return "ShipmentID: " + shipmentID + "ProductID: " + productID + "Quantity: " + quantity;
     }
 }

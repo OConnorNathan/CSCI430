@@ -1,22 +1,30 @@
-
+/*******************************************************************
+ * 
+ * Project 1: Invoice, implementation
+ * File: Invoice.java
+ * 
+ * Author: Joseph Hoversten
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Book.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
-import java.io.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Invoice{
-
-    double total;
-    String id;
+    
+    private String date;
+    private double total;
+    private int id;
     private List<Wish> wishlist = new LinkedList<Wish>();
-    //private static final long serialVersionUID = 1L;
 
-    public Invoice(
-            String date,
-            List<Wish> wishlist,
-            double total) {
-        this.id = "INV" + InvoiceIdServer.instance().getId();
+    public Invoice(String date, List<Wish> wishlist, double total) {
+        this.date = date;
+        this.id = InvoiceIdServer.instance().getId();
         this.total = total;
         this.wishlist = wishlist;
     }
@@ -29,16 +37,12 @@ public class Invoice{
         this.total = total;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public List<Wish> getWishlist() {
-        return wishlist;
+    public Iterator<Wish> getWishlist() {
+        return wishlist.iterator();
     }
 
     public void setWishlist(List<Wish> wishlist) {
@@ -46,6 +50,6 @@ public class Invoice{
     }
 
     public String toString(){
-        
+        return "date: " + date + "id: " + id + "total: " + total + "Items: " + wishlist.toString();
     }
 }

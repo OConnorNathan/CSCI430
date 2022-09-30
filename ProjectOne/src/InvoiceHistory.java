@@ -1,58 +1,74 @@
+/*******************************************************************
+ * 
+ * Project 1: InvoiceHistory, implementation
+ * File: InvoiceHistory.java
+ * 
+ * Author: Joseph Hoversten
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Catalog.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.io.*;
 
-
-import java.io.Serializable;
-
 public class InvoiceHistory implements Serializable {
+
     private static final long serialVersionUID = 1L;
-    private String id, date;
-    private LinkedList<Invoice> InvoiceItems = new LinkedList<Invoice>();
-    transient DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    LocalDateTime now;
+    private LinkedList<Invoice> invoices = new LinkedList<Invoice>();
+    private static InvoiceHistory invoiceList;
 
-    InvoiceHistory(String id, LinkedList<Invoice> InvoiceItems) {
-        now = LocalDateTime.now();
-        this.id = id;
-        this.date = dtf.format(now);
-        this.InvoiceItems = InvoiceItems;
+    private InvoiceHistory(){
     }
 
-    InvoiceHistory(String id) {
-        now = LocalDateTime.now();
-        this.id = id;
-        this.date = dtf.format(now);
+    public static InvoiceHistory instance() {
+        if (invoiceList == null) {
+          return (invoiceList = new InvoiceHistory());
+        } else {
+          return invoiceList;
+        }
     }
 
-    public String getId() {
-        return id;
+    public boolean insertInvoice(Invoice invoice) {
+        invoices.add(invoice);
+        return true;
     }
-
-    public String getDate() {
-        return date;
+    
+    public Iterator getInvoices(){
+         return invoices.iterator();
     }
-
-    public Iterator getProducts() {
-        return InvoiceItems.iterator();
+      
+    private void writeObject(java.io.ObjectOutputStream output) {
+        try {
+          output.defaultWriteObject();
+          output.writeObject(invoiceList);
+        } catch(IOException ioe) {
+          ioe.printStackTrace();
+        }
     }
-
-    public void setId(String id) {
-        this.id = id;
+    private void readObject(java.io.ObjectInputStream input) {
+        try {
+          if (invoiceList != null) {
+            return;
+          } else {
+            input.defaultReadObject();
+            if (invoiceList == null) {
+              invoiceList = (InvoiceHistory) input.readObject();
+            } else {
+              input.readObject();
+            }
+          }
+        } catch(IOException ioe) {
+          ioe.printStackTrace();
+        } catch(ClassNotFoundException cnfe) {
+          cnfe.printStackTrace();
+        }
     }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
- 
-    public void setShipmentItems(LinkedList<Invoice> shipmentItems) {
-        this.InvoiceItems = shipmentItems;
-    }
-
     public String toString() {
-        return "ID: " + id + " Product Name: " + products + " Quantity: " + quantity + " Price: " + price;
+        return invoices.toString();
     }
 }

@@ -1,9 +1,10 @@
 /*******************************************************************
  * 
- * Project 1: Warehouse, Inventory implementation
+ * Project 1: Warehouse, Wait implementation
  * File: Wait.java
  * 
  * Author: Jacob Haapoja
+ * Group Number: 2
  * Instructor: Dr. Ramnath Sarnath
  * Class: CSCI 430
  * 
@@ -12,9 +13,6 @@
  *******************************************************************/
 package ProjectOne.src;
 
-
-import java.util.*;
-import java.lang.*;
 import java.io.*;
 
 public class Wait implements Serializable{
