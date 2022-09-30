@@ -57,7 +57,7 @@ public class Client implements Serializable {
     return wishlist.removeWish(pid);
   }
 
-  public ListIterator getWishs(){
+  public Iterator getWishs(){
     return wishlist.getWishs();
   }
   
@@ -77,7 +77,7 @@ public class Client implements Serializable {
     return transactHist.makePayment(payment);
   }
 
-  public ListIterator getTransactions(){
+  public Iterator getTransactions(){
     return transactHist.getTransactions();
   }
 

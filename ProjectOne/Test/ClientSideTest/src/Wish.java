@@ -12,7 +12,8 @@
  * 
  *******************************************************************/
 
-public class Wish {
+import java.io.Serializable;
+public class Wish implements Serializable{
     private int pid;
     private int quantity;
     private double price;

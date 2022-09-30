@@ -42,11 +42,11 @@ public class ClientList implements Serializable {
     return false;
   }
 
-  public ListIterator getClients(){
-     return clients.listIterator();
+  public Iterator getClients(){
+     return clients.iterator();
   }
   
-  private void writeObject(java.io.ObjectOutputStream output) {
+  public void writeObject(java.io.ObjectOutputStream output) {
     try {
       output.defaultWriteObject();
       output.writeObject(clientList);

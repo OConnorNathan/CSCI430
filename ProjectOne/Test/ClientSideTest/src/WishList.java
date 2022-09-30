@@ -40,8 +40,8 @@ public class WishList implements Serializable{
         return false;
     }
     
-    public ListIterator getWishs(){
-        return wishs.listIterator();
+    public Iterator getWishs(){
+        return wishs.iterator();
     }
 
     public String toString(){

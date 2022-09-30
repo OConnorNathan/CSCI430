@@ -13,8 +13,8 @@
  *******************************************************************/
 
 import java.util.*;
-
-public class TransactionHistory {
+import java.io.Serializable;
+public class TransactionHistory implements Serializable{
     
     private LinkedList<Transaction> transactions;
     private double balance;
@@ -43,8 +43,8 @@ public class TransactionHistory {
         return false;
     }
     
-    public ListIterator getTransactions(){
-        return transactions.listIterator();
+    public Iterator getTransactions(){
+        return transactions.iterator();
     }
 
     public double makePayment(double payment){
