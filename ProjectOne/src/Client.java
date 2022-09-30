@@ -1,8 +1,21 @@
-
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, Client implementation
+ * File: Client.java
+ * 
+ * Author: Nathan O'Connor
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Book.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
 package ProjectOne.src;
 
 import java.io.*;
 import java.util.*;
+
 public class Client implements Serializable {
   private static final long serialVersionUID = 1L;
   private int cid;
@@ -14,7 +27,7 @@ public class Client implements Serializable {
   public  Client (String name, String address) {
     this.name = name;
     this.address = address;
-    this.cid = ClientIdServer.instance().getId();
+    this.cid = (ClientIdServer.instance()).getId();
   }
   public String getName() {
     return name;
@@ -63,7 +76,7 @@ public class Client implements Serializable {
   }
 
   public String toString() {
-    String string = "Client name " + name + " address " + address + " cid " + cid;
+    String string = "Client name " + name + " address " + address + " cid " + cid + wishlist.toString();
     return string;
   }
 

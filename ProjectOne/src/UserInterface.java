@@ -40,7 +40,7 @@ public class UserInterface {
     if (yesOrNo("Look for saved data and  use it?")) {
       retrieve();
     } else {
-      library = System.instance();
+      library = Database.instance();
     }
   }
   public static UserInterface instance() {

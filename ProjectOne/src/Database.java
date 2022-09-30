@@ -1,7 +1,7 @@
 /*******************************************************************
  * 
- * Project 1: Warehouse, System implementation
- * File: System.java
+ * Project 1: Warehouse, Database implementation
+ * File: Database.java
  * 
  * Author: Nathan O'Connor, Jake Happoja, Blake Hoosline, Joseph Hoversten
  * Group Number: 2
@@ -15,7 +15,7 @@ package ProjectOne.src;
 
 import java.util.*;
 import java.io.*;
-public class System implements Serializable {
+public class Database implements Serializable {
   private static final long serialVersionUID = 1L;
   public static final int BOOK_NOT_FOUND  = 1;
   public static final int BOOK_NOT_ISSUED  = 2;
@@ -30,19 +30,19 @@ public class System implements Serializable {
   private ClientList clientList;
   private InvoiceHistory invoiceHistory;
   private ShipmentHistory shipmentHistory;
-  private static System system;
-  private System() {
+  private static Database database;
+  private Database() {
     inventory = Inventory.instance();
     clientList = ClientList.instance();
     invoiceHistory = InvoiceHistory.instance();
     shipmentHistory = ShipmentHistory.instance();
   }
-  public static System instance() {
-    if (system == null) {
+  public static Database instance() {
+    if (database == null) {
       ClientIdServer.instance(); // instantiate all singletons
-      return (system = new System());
+      return (database = new Database());
     } else {
-      return system;
+      return database;
     }
   }
   public Product addProduct(String description, int quantity, float price, float wholesalePrice) {
@@ -67,13 +67,13 @@ public class System implements Serializable {
   public Iterator getClients() {
       return clientList.getClients();
   }
-  public static System retrieve() {
+  public static Database retrieve() {
     try {
       FileInputStream file = new FileInputStream("LibraryData");
       ObjectInputStream input = new ObjectInputStream(file);
       input.readObject();
       ClientIdServer.retrieve(input);
-      return system;
+      return database;
     } catch(IOException ioe) {
       ioe.printStackTrace();
       return null;
@@ -86,7 +86,7 @@ public class System implements Serializable {
     try {
       FileOutputStream file = new FileOutputStream("LibraryData");
       ObjectOutputStream output = new ObjectOutputStream(file);
-      output.writeObject(system);
+      output.writeObject(database);
       output.writeObject(ClientIdServer.instance());
       return true;
     } catch(IOException ioe) {
@@ -97,7 +97,7 @@ public class System implements Serializable {
   private void writeObject(java.io.ObjectOutputStream output) {
     try {
       output.defaultWriteObject();
-      output.writeObject(system);
+      output.writeObject(database);
     } catch(IOException ioe) {
       System.out.println(ioe);
     }
@@ -105,8 +105,8 @@ public class System implements Serializable {
   private void readObject(java.io.ObjectInputStream input) {
     try {
       input.defaultReadObject();
-      if (system == null) {
-        system = (System) input.readObject();
+      if (database == null) {
+        database = (Database) input.readObject();
       } else {
         input.readObject();
       }
