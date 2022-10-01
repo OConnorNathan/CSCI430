@@ -1,7 +1,7 @@
 /*******************************************************************
  * 
- * Project 1: Warehouse, ShipmentHistory implementation
- * File: ShipmentHistory.java
+ * Project 1: Warehouse, ShipmentTest implementation
+ * File: ShipmentTest.java
  * 
  * Author: Blake Hoosline
  * Group Number: 2
