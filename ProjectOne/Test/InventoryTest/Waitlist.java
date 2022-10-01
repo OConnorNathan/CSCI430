@@ -18,16 +18,8 @@ import java.io.*;
 public class Waitlist implements Serializable{
     private static final long serialVersionUID = 1L;
     private LinkedList<Wait> waits= new LinkedList<Wait>();
-    private static Waitlist waitlist;
-    Waitlist(){}
 
-    public static Waitlist instance(){
-        if (waitlist == null){
-            return (waitlist = new Waitlist());
-        } else {
-            return waitlist;
-        }
-    }
+    public Waitlist(){}
 
     public boolean insertWait(Wait wait){
         waits.add(wait);
@@ -45,7 +37,7 @@ public class Waitlist implements Serializable{
       }
     }
 
-    public Iterator getWaits(){
+    public Iterator<Wait> getWaits(){
         return waits.iterator();
     }
 

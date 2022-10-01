@@ -42,8 +42,17 @@ public class ClientList implements Serializable {
     return false;
   }
 
-  public ListIterator getClients(){
-     return clients.listIterator();
+  public Client findClient(int cid){
+    for(Client c: clients){
+      if(c.getCID() == cid){
+        return c;
+      }
+    }
+    return null;
+  }
+
+  public Iterator getClients(){
+     return clients.iterator();
   }
   
   private void writeObject(java.io.ObjectOutputStream output) {

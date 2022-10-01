@@ -48,16 +48,16 @@ public class Client implements Serializable {
   public void setAddress(String newAddress) {
     this.address = newAddress;
   }
-
-  public boolean addWish(int pid, int quantity, double price){
+  
+  public Wish addWish(int pid, int quantity, double price){
     return wishlist.addWish(new Wish(pid, quantity, price));
   }
 
-  public boolean removeWish(int pid){
-    return wishlist.removeWish(pid);
+  public boolean removeWish(int pid, int quantity){
+    return wishlist.removeWish(pid, quantity);
   }
 
-  public ListIterator getWishs(){
+  public Iterator getWishs(){
     return wishlist.getWishs();
   }
   
@@ -77,7 +77,7 @@ public class Client implements Serializable {
     return transactHist.makePayment(payment);
   }
 
-  public ListIterator getTransactions(){
+  public Iterator getTransactions(){
     return transactHist.getTransactions();
   }
 

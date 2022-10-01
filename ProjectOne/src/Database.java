@@ -11,7 +11,6 @@
  * Based On: Library.java by Dr. Ramnath Sarnath
  * 
  *******************************************************************/
-package ProjectOne.src;
 
 import java.util.*;
 import java.io.*;
@@ -29,13 +28,13 @@ public class Database implements Serializable {
   private Inventory inventory;
   private ClientList clientList;
   private InvoiceHistory invoiceHistory;
-  private ShipmentHistory shipmentHistory;
+  private ShipmentList shipmentList;
   private static Database database;
   private Database() {
     inventory = Inventory.instance();
     clientList = ClientList.instance();
     invoiceHistory = InvoiceHistory.instance();
-    shipmentHistory = ShipmentHistory.instance();
+    shipmentList = ShipmentList.instance();
   }
   public static Database instance() {
     if (database == null) {
@@ -52,7 +51,7 @@ public class Database implements Serializable {
     }
     return null;
   }
-  public Client addClient(String name, String address, String phone) {
+  public Client addClient(String name, String address) {
     Client client = new Client(name, address);
     if (clientList.insertClient(client)) {
       return (client);
@@ -66,6 +65,38 @@ public class Database implements Serializable {
 
   public Iterator getClients() {
       return clientList.getClients();
+  }
+
+  public boolean addWishListItem(int clientID, int productID, int quantity){
+
+    Product product = inventory.searchInventory(productID);
+    if(product == null){
+      return false;
+    }
+    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
+      if(c.next().getCID() == clientID){
+        c.next().addWish(productID, quantity, (double) product.getPrice() * quantity);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public Wish removeWishListItem(int clientID, int productID){
+    Client client = clientList.findClient(clientID);
+    Product product = inventory.searchInventory(productID);
+    if(client == null || product == null){
+      return null;
+    }
+    else{
+      for(final Iterator<Wish> w = client.getWishs(); w.hasNext();){
+        final Wish value = w.next();
+        if(value.getPID() == productID){
+            return value;
+        }
+      }
+    }
+    return null;
   }
   public static Database retrieve() {
     try {

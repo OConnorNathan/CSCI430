@@ -26,22 +26,36 @@ public class WishList implements Serializable{
         wishs = new LinkedList<Wish>();
     }
 
+    public Wish findWish(int pid){
+        for(Wish w: wishs){
+            if(w.getPID() == pid){
+                return w;
+            }
+        }
+        return null;
+    }
     public boolean addWish(Wish wishy){
         return wishs.add(wishy);
     }
 
-    public boolean removeWish(int pid){
+    public boolean removeWish(int pid, int quantity){
 
-        for(Wish w: wishs){
-            if(w.getPID() == pid){
-                return wishs.remove(w);
+        for(Iterator<Wish> w = this.getWishs(); w.hasNext();){
+            if(w.next().getPID() == pid){
+                if(w.next().getQuantity() - quantity <= 0){
+                    w.remove();
+                }
+                else{
+                    w.next().setQuantity(w.next().getQuantity() - quantity);
+                }
+                return true;
             }
         }
         return false;
     }
     
-    public ListIterator getWishs(){
-        return wishs.listIterator();
+    public Iterator getWishs(){
+        return wishs.iterator();
     }
 
     public String toString(){

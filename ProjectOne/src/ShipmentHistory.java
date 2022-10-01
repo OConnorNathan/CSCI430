@@ -1,3 +1,4 @@
+
 /*******************************************************************
  * 
  * Project 1: Warehouse, ShipmentHistory implementation
@@ -11,65 +12,36 @@
  * Based On: Catalog.java by Dr. Ramnath Sarnath
  * 
  *******************************************************************/
-package ProjectOne.src;
+//package ProjectOne.src;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.Serializable;
 import java.util.*;
-import java.io.*;
 
 public class ShipmentHistory implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private LinkedList<Shipment> shipments = new LinkedList<Shipment>();
-    private static ShipmentHistory shipmentList;
 
-    private ShipmentHistory(){
-    }
+    private LinkedList<Shipment> shipments;
+    private double payment;
 
-    public static ShipmentHistory instance() {
-        if (shipmentList == null) {
-          return (shipmentList = new ShipmentHistory());
-        } else {
-          return shipmentList;
-        }
+    public ShipmentHistory(double payment, LinkedList<Shipment> shipments) {
+        this.shipments = shipments;
+        this.payment = payment;
     }
 
-    public boolean insertShipment(Shipment shipment) {
-        shipments.add(shipment);
-        return true;
+    public ShipmentHistory() {
+        shipments = new LinkedList<Shipment>();
+        payment = 0;
     }
-    
-    public Iterator getShipments(){
-         return shipments.iterator();
+
+    public Iterator getShipments() {
+        return shipments.iterator();
     }
-      
-    private void writeObject(java.io.ObjectOutputStream output) {
-        try {
-          output.defaultWriteObject();
-          output.writeObject(shipmentList);
-        } catch(IOException ioe) {
-          ioe.printStackTrace();
-        }
+
+    public double makePayment(double balance) {
+        payment = payment + balance;
+        return payment;
     }
-    private void readObject(java.io.ObjectInputStream input) {
-        try {
-          if (shipmentList != null) {
-            return;
-          } else {
-            input.defaultReadObject();
-            if (shipmentList == null) {
-              shipmentList = (ShipmentHistory) input.readObject();
-            } else {
-              input.readObject();
-            }
-          }
-        } catch(IOException ioe) {
-          ioe.printStackTrace();
-        } catch(ClassNotFoundException cnfe) {
-          cnfe.printStackTrace();
-        }
-    }
+
     public String toString() {
-        return shipments.toString();
+        return "Payment: " + payment;
     }
 }

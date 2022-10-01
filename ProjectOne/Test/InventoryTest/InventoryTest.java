@@ -10,6 +10,8 @@
  * 
  *******************************************************************/
 
+import ProjectOne.src.*;
+
 public class InventoryTest{
     public static void main(String[] args) {
         Product p1 = new Product("Hammer", 20, 5, 2.5);
