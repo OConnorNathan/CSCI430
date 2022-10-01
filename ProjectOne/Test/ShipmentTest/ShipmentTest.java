@@ -1,5 +1,20 @@
+/*******************************************************************
+ * 
+ * Project 1: Warehouse, ShipmentHistory implementation
+ * File: ShipmentHistory.java
+ * 
+ * Author: Blake Hoosline
+ * Group Number: 2
+ * Instructor: Dr. Ramnath Sarnath
+ * Class: CSCI 430
+ * 
+ * Based On: Catalog.java by Dr. Ramnath Sarnath
+ * 
+ *******************************************************************/
+package ProjectOne.src;
+
 import java.io.*;
-import java.util.*; // make call to history and list for info 
+import java.util.*;
 
 public class ShipmentTest {
     public static void main(String[] args) throws Exception {
