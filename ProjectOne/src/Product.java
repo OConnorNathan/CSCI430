@@ -13,17 +13,19 @@
  *******************************************************************/
 
 import java.io.*;
+import java.util.*;
 
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
     private int pid;
     private String description;
     private int quantity;
-    private float price;
-    private float wholesalePrice;
+    private double price;
+    private double wholesalePrice;
+    private Waitlist waitlist = new Waitlist();
   
   
-    public Product(String description, int quantity, float price, float wholesalePrice){
+    public Product(String description, int quantity, double price, double wholesalePrice){
         this.pid = ProductIdServer.instance().getId();
         this.description = description;
         this.quantity = quantity;
@@ -40,11 +42,21 @@ public class Product implements Serializable {
     public int getQuant(){
         return quantity;
     }
-    public float getPrice(){
+    public double getPrice(){
         return price;
     }
-    public float getWSPrice(){
+    public double getWSPrice(){
         return wholesalePrice;
+    }
+    public Iterator<Wait> getWaits(){
+        return waitlist.getWaits();
+    }
+
+    public boolean addWait(Wait wait){
+        return waitlist.insertWait(wait);
+    }
+    public boolean fulfillWait(Wait wait){
+        return waitlist.fulfillWait(wait);
     }
 
     public boolean setDesc(String description){
@@ -65,6 +77,9 @@ public class Product implements Serializable {
     }
 
     public String toString(){
-        return "pid: " + pid + "description: " + description + "quantity: " + quantity + "price: " + price + "wholesale price: " + wholesalePrice;
+        return "pid: " + pid + "description: " + description + 
+                "quantity: " + quantity + "price: " + price + 
+                "wholesale price: " + wholesalePrice + 
+                "waitlist: " + waitlist.toString();
     }
 }

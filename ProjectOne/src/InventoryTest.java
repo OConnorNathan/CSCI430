@@ -10,12 +10,12 @@
  * 
  *******************************************************************/
 
+import java.util.*;
+
 public class InventoryTest{
     public static void main(String[] args) {
-        Product p1 = new Product("Hammer", 20, 5, 2.5);
-        Product p2 = new Product("Box of Nails: 100 count", 200, 1, 0.25);
-
-        Product pro;
+        Product p1 = new Product("Hammer", 20, 5.0, 2.5);
+        Product p2 = new Product("Box of Nails: 100 count", 200, 1.0, 0.25);
 
         Inventory inventory = Inventory.instance();
 
@@ -24,7 +24,7 @@ public class InventoryTest{
 
         Iterator<Product> p= inventory.getProducts();
         while (p.hasNext()){
-            system.out.println(p.next().toString());
+            System.out.println(p.next().toString());
         }
 
 
@@ -33,7 +33,7 @@ public class InventoryTest{
 
         int cid1 = 1;
             
-        system.out.println(inventory.toString());
+        System.out.println(inventory.toString());
 
         inventory.searchInventory("Box of Nails: 100 count").setQuant(0);
         inventory.searchInventory("Hammer").setQuant(0);
@@ -45,14 +45,14 @@ public class InventoryTest{
         inventory.searchInventory(hammerID).addWait(w1);
         inventory.searchInventory(nailID).addWait(w2);
 
-        system.out.println(inventory.toString());
+        System.out.println(inventory.toString());
 
-        Iterator<Wait> waits = inventory.searchInventory(hammerID).getwaits();
+        Iterator<Wait> waits = inventory.searchInventory(hammerID).getWaits();
 
         while(waits.hasNext()){
-            inventory.searchInventory(hammerID).fulfillWait(waits.Next());
+            inventory.searchInventory(hammerID).fulfillWait(waits.next());
         }
 
-        system.out.println(inventory.toString());
+        System.out.println(inventory.toString());
     }
 }
