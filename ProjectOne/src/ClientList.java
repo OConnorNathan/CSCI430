@@ -51,7 +51,7 @@ public class ClientList implements Serializable {
     return null;
   }
 
-  public Iterator getClients(){
+  public Iterator<Client> getClients(){
      return clients.iterator();
   }
   

@@ -31,6 +31,6 @@ public class Wait implements Serializable{
     }
 
     public String toString(){
-        return "cid: " + cid + "quantity: " + quantity;
+        return "cid: " + cid + ", quantity: " + quantity;
     }
 }

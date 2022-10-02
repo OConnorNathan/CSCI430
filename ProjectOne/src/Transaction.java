@@ -12,8 +12,9 @@
  * 
  *******************************************************************/
 
-public class Transaction{
-    
+import java.io.Serializable;
+public class Transaction implements Serializable{
+    private static final long serialVersionUID = 1L;
     private String date;
     private int type;
     private int invoiceID;
@@ -59,6 +60,6 @@ public class Transaction{
     }
 
     public String toString(){
-        return date + ", " + type + ", " + invoiceID + ", " + dollarAmount + " ";
+        return "Date: " + date + ", Type: " + type + ", InvoiceID: " + invoiceID + ", Cost: " + dollarAmount + " ";
     }
 }

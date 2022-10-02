@@ -11,10 +11,10 @@
  * Based On: Book.java by Dr. Ramnath Sarnath
  * 
  *******************************************************************/
-
+import java.io.*;
 import java.util.*;
 
-public class Invoice{
+public class Invoice implements Serializable{
     
     private String date;
     private double total;

@@ -12,7 +12,10 @@
  * 
  *******************************************************************/
 
-public class Wish {
+import java.io.*;
+
+public class Wish implements Serializable{
+    private static final long serialVersionUID = 1L;
     private int pid;
     private int quantity;
     private double price;
@@ -41,6 +44,6 @@ public class Wish {
         return price;
     }
     public String toString(){
-        return pid + ", " + quantity + ", " + price + " ";
+        return "ProductID: " + pid + ", Quantity: " + quantity + ", Price: " + price + " ";
     }
 }

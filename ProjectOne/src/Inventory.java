@@ -67,21 +67,21 @@ public class Inventory implements Serializable {
 
   private void readObject(java.io.ObjectInputStream input){
       try {
-          if (inventory != null) {
-            return;
+        if (inventory != null) {
+          return;
+        } else {
+          input.defaultReadObject();
+          if (inventory == null) {
+            inventory = (Inventory) input.readObject();
           } else {
-            input.defaultReadObject();
-            if (inventory == null) {
-              inventory = (Inventory) input.readObject();
-            } else {
-              input.readObject();
-            }
+            input.readObject();
           }
-        } catch(IOException ioe) {
-          System.out.println("in Inventory readObject \n" + ioe);
-        } catch(ClassNotFoundException cnfe) {
-          cnfe.printStackTrace();
         }
+      } catch(IOException ioe) {
+        System.out.println("in Inventory readObject \n" + ioe);
+      } catch(ClassNotFoundException cnfe) {
+        cnfe.printStackTrace();
+      }
   }
 
   public String toString(){

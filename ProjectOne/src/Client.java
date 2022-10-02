@@ -53,11 +53,15 @@ public class Client implements Serializable {
     return wishlist.addWish(new Wish(pid, quantity, price));
   }
 
-  public boolean removeWish(int pid, int quantity){
-    return wishlist.removeWish(pid, quantity);
+  public boolean removeWish(int pid){
+    return wishlist.removeWish(pid);
   }
 
-  public Iterator getWishs(){
+  public Wish findWish(int pid){
+    return wishlist.findWish(pid);
+  }
+
+  public Iterator<Wish> getWishs(){
     return wishlist.getWishs();
   }
   
@@ -81,13 +85,13 @@ public class Client implements Serializable {
     return transactHist.getBalance();
   }
 
-  public Iterator getTransactions(){
+  public Iterator<Transaction> getTransactions(){
     return transactHist.getTransactions();
   }
 
   public String toString() {
-    String string = cid + " " + name + " " + address + " " + wishlist.toString() + transactHist.toString();
-    return "Client: " + cid + ", " + name + ", " + address + ", " + wishlist.toString() + transactHist.toString() + "\n";
+    String string = "ClientID: " + cid + ", Name: " + name + ", Address: " + address + " " + wishlist.toString() + transactHist.toString() + "\n";
+    return string;
   }
 
 }

@@ -51,6 +51,7 @@ public class Database implements Serializable {
     }
     return null;
   }
+
   public Client addClient(String name, String address) {
     Client client = new Client(name, address);
     if (clientList.insertClient(client)) {
@@ -59,19 +60,19 @@ public class Database implements Serializable {
     return null;
   }
 
-  public Iterator getProducts() {
+  public Iterator<Product> getProducts() {
     return inventory.getProducts();
   }
 
-  public Iterator getClients() {
+  public Iterator<Client> getClients() {
     return clientList.getClients();
   }
 
-  public Iterator getInvoices() {
+  public Iterator<Invoice> getInvoices() {
     return invoiceHistory.getInvoices();
   }
 
-  public Iterator getShipments() {
+  public Iterator<Shipment> getShipments() {
     return shipmentList.getShipments();
   }
 
@@ -81,26 +82,30 @@ public class Database implements Serializable {
     if(product == null){
       return false;
     }
-    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
-      if(c.next().getCID() == clientID){
-        c.next().addWish(productID, quantity, (double) product.getPrice() * quantity);
-        return true;
-      }
-    }
-    return false;
+    Client c = clientList.findClient(clientID);
+    c.addWish(productID, quantity, (quantity * product.getPrice()));
+    return true;
   }
 
   public boolean removeWishListItem(int clientID, int productID, int quantity){
-    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
-      if(c.next().getCID() == clientID){
-        c.next().removeWish(productID, quantity);
-        return true;
+    Client c = clientList.findClient(clientID);
+    Wish w = c.findWish(productID);
+    if(w != null){
+      if(w.getQuantity() - quantity <= 0){
+        c.removeWish(productID);
       }
+      else{
+        double temp = w.getPrice() / w.getQuantity();
+        w.setPrice(temp * (w.getQuantity() - quantity));
+        w.setQuantity(w.getQuantity() - quantity);
+      }
+      return true;
     }
     return false;
   }
 
-  public Iterator getClientWishList(int clientID){
+
+  public Iterator<Wish> getClientWishList(int clientID){
     for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
       final Client client = c.next();
       if(client.getCID() == clientID){
@@ -113,61 +118,68 @@ public class Database implements Serializable {
   public Shipment addShipment(int productID, int quantity, double price) {
     Shipment shipment = new Shipment(productID, quantity, price);
     if (shipmentList.insertShipment(shipment)) {
+      /* UPDATE INVENTORY STOCK */
+      /* FULFILL WAITLIST */
       return shipment;
     } return null;
   }
 
 
   public double makePayment(int clientID, double payment){
-    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
-      final Client client = c.next();
-      if(client.getCID() == clientID){
-        if(client.makePayment(payment) < 0){
-          return Double.MIN_VALUE;
-        }
-        return client.makePayment(payment);
-      }
-    }
-    return Double.MAX_VALUE;
+    Client client = clientList.findClient(clientID);
+    double balance = client.makePayment(payment);
+    client.addTransaction(new Transaction(java.time.LocalDate.now().toString(), 0, 0, payment));
+    return balance;
   }
 
   public void makeOrder(int clientID, List<Integer> productIDs){
     List<Wish> orderWishList = new ArrayList<Wish>();
-    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
-      final Client client = c.next();
-      if(client.getCID() == clientID){
-        for(Iterator<Wish> w = client.getWishs(); w.hasNext();){
-          for(int i = 0; i < productIDs.size(); i++){
-            if(w.next().getPID() == productIDs.get(i)){
-              orderWishList.add(w.next());
-              client.removeWish(clientID, Integer.MAX_VALUE);
-            }
+    Client client = clientList.findClient(clientID);
+  
+    if(client != null){
+      for(Iterator<Wish> w = client.getWishs(); w.hasNext();){
+
+        Wish wish = w.next();
+
+        for(int i = 0; i < productIDs.size(); i++){
+          if(wish.getPID() == productIDs.get(i)){
+
+            orderWishList.add(wish);
+            client.removeWish(wish.getPID());
+
           }
         }
-        for(Iterator<Product> p = inventory.getProducts(); p.hasNext();){
-          for(int i = 0; i < orderWishList.size(); i++){
-            if(orderWishList.get(i).getPID() == p.next().getPID()){
-              if(p.next().getQuant() - orderWishList.get(i).getQuantity() < 0){
-                int overQuantity = p.next().getQuant() - orderWishList.get(i).getQuantity();
-                p.next().addWait(new Wait(client.getCID(), (overQuantity * -1)));
-                orderWishList.get(i).setQuantity(orderWishList.get(i).getQuantity() + overQuantity);
-                p.next().setQuant(0);
-              }
-              else{
-                p.next().setQuant(p.next().getQuant() - orderWishList.get(i).getQuantity());
-              }
-            }
-          }
-        }
-        double total = 0;
-        for(Wish w: orderWishList){
-          total += (w.getPrice() * w.getQuantity());
-        }
-        Invoice invoice = new Invoice(java.time.LocalDate.now().toString(), orderWishList, total);
-        invoiceHistory.insertInvoice(invoice);
-        
-        client.addTransaction(invoice.getDate(), 1, invoice.getId(), invoice.getTotal());
       }
+
+      for(Iterator<Product> p = inventory.getProducts(); p.hasNext();){
+        Product product = p.next();
+        for(int i = 0; i < orderWishList.size(); i++){
+          if(orderWishList.get(i).getPID() == product.getPID()){
+            if(product.getQuant() - orderWishList.get(i).getQuantity() < 0){
+
+              int overQuantity = orderWishList.get(i).getQuantity() - product.getQuant();
+              product.addWait(new Wait(client.getCID(), overQuantity));
+              orderWishList.get(i).setQuantity(product.getQuant());
+              orderWishList.get(i).setPrice(product.getQuant() * product.getPrice());
+              product.setQuant(0);
+
+            }
+            else{
+              product.setQuant(product.getQuant() - orderWishList.get(i).getQuantity());
+            }
+          }
+        }
+      }
+
+      double total = 0;
+      for(Wish w: orderWishList){
+        total += (w.getPrice());
+      }
+
+      Invoice invoice = new Invoice(java.time.LocalDate.now().toString(), orderWishList, total);
+      invoiceHistory.insertInvoice(invoice);
+      
+      client.addTransaction(invoice.getDate(), 1, invoice.getId(), invoice.getTotal());
     }
   }
 
@@ -175,14 +187,14 @@ public class Database implements Serializable {
     String clientBalances = new String();
     for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
       final Client client = c.next();
-      if(client.getBalance() != 0){
+      if(client.getBalance() > 0){
         clientBalances += client.getCID() + ": " + client.getBalance();
       }
     }
     return clientBalances;
   }
 
-  public Iterator getClientTransactions(int clientID){
+  public Iterator<Transaction> getClientTransactions(int clientID){
     for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
       final Client client = c.next();
       if(client.getCID() == clientID){

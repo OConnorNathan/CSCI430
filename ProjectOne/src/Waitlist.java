@@ -40,37 +40,9 @@ public class Waitlist implements Serializable{
     public Iterator<Wait> getWaits(){
         return waits.iterator();
     }
-/* 
-    private void writeObject(java.io.ObjectOutputStream output){
-        try {
-            output.defaultWriteObject();
-            output.writeObject(waits);
-          } catch(IOException ioe) {
-            System.out.println(ioe);
-          }
-    }
 
-    private void readObject(java.io.ObjectInputStream input) {
-        try {
-          if (waits != null) {
-            return;
-          } else {
-            input.defaultReadObject();
-            if (waits == null) {
-              waits = (Waitlist) input.readObject();
-            } else {
-              input.readObject();
-            }
-          }
-        } catch(IOException ioe) {
-          System.out.println("in Waitlist readObject \n" + ioe);
-        } catch(ClassNotFoundException cnfe) {
-          cnfe.printStackTrace();
-        }
-      }
-      */
-      public String toString(){
-        return waits.toString();
-      }
+    public String toString(){
+      return waits.toString();
+    }
 }
 

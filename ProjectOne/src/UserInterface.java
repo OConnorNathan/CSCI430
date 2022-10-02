@@ -98,7 +98,7 @@ public class UserInterface {
   public int getCommand() {
     do {
       try {
-        int value = Integer.parseInt(getToken("Enter command:" + HELP + " for help"));
+        int value = Integer.parseInt(getToken("Enter command: " + " for help enter " + HELP ));
         if (value >= EXIT && value <= HELP) {
           return value;
         }
@@ -116,6 +116,7 @@ public class UserInterface {
     System.out.println(VIEW_INVENTORY + " Show Inventory");
     System.out.println(ADD_ITEM_WISHLIST + " Add Product to a Wishlist");
     System.out.println(REMOVE_ITEM_WISHLIST + " Remove a Product From a Wishlist");
+    System.out.println(SHOW_CLIENT_WISHLIST + " Show Client Wishlist");
     System.out.println(ADD_SHIPMENT + " Add a Shipment");
     System.out.println(MAKE_PAY + " Make a Payment Towards a Balance");
     System.out.println(MAKE_ORDER + " Order From a Wishlist");
@@ -190,8 +191,8 @@ public class UserInterface {
 
   public void showClientWishList(){
     int clientID = Integer.parseInt(getToken("Enter a Client ID"));
-    Iterator wishlist = database.getClientWishList(clientID);
-    while(wishlist.hasNext()){
+    Iterator<Wish> wishlist = database.getClientWishList(clientID);
+      while(wishlist.hasNext()){
       Wish wish = (Wish)(wishlist.next());
       System.out.println(wish.toString());
     }
@@ -216,22 +217,20 @@ public class UserInterface {
   double payment = Double.parseDouble(getToken("Enter a payment"));
   double balance;
   balance = database.makePayment(clientID, payment);
-  if(balance == Double.MIN_VALUE){
-    System.out.println("Failed to make a payment. The payment was more than the balance.");
-  }
-  else if(balance == Double.MAX_VALUE){
-    System.out.println("Failed to make a payment. The client doesn't exist.");
-  }
-  else{
-    System.out.println("New Client Balance: " + balance);
-  }
+
+  System.out.println("New Client Balance: " + balance);
+  
  }
  
  public void makeOrder(){
   int clientID = Integer.parseInt(getToken("Enter a client ID"));
-  database.getClientWishList(clientID);
+  Iterator<Wish> wishs = database.getClientWishList(clientID);
   List<Integer> productIDs = new ArrayList<Integer>();
   System.out.println("Enter product IDs to be added to the order. Type 0 to stop adding");
+
+  while(wishs.hasNext()){
+    System.out.println(wishs.next().toString());
+  }
 
   while(true){
     String temp = getToken("ProductID: ");
@@ -242,6 +241,11 @@ public class UserInterface {
       productIDs.add(Integer.parseInt(temp));
     }
   }
+
+  if (productIDs.size() == 0){
+    return;
+  }
+
   database.makeOrder(clientID, productIDs);
  }
 
@@ -318,6 +322,8 @@ public class UserInterface {
                                 break;
         case REMOVE_ITEM_WISHLIST:  removeItemFromWishList();
                                 break;
+        case SHOW_CLIENT_WISHLIST: showClientWishList();
+                                break;
         case ADD_SHIPMENT:      addShipment();
                                 break;
         case MAKE_PAY:          makePayment();
@@ -327,6 +333,8 @@ public class UserInterface {
         case GET_OUTSTANDING_BALANCES: getOustandingBalances();
                                 break;
         case GET_TRANSACTIONS:  getClientTransactions();
+                                break;
+        case SHOW_CLIENTS:      showClients();
                                 break;
         case SHOW_INVOICES:     showInvoices();
                                 break;

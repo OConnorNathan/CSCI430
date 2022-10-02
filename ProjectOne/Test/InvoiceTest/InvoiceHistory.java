@@ -37,7 +37,7 @@ public class InvoiceHistory implements Serializable {
         return true;
     }
     
-    public Iterator getInvoices(){
+    public Iterator<Invoice> getInvoices(){
          return invoices.iterator();
     }
       

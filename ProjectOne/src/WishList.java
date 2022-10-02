@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.*;
 
 public class WishList implements Serializable{
-    
+    private static final long serialVersionUID = 1L;
     private LinkedList<Wish> wishs;
 
     public WishList(LinkedList<Wish> wishs){
@@ -38,23 +38,15 @@ public class WishList implements Serializable{
         return wishs.add(wishy);
     }
 
-    public boolean removeWish(int pid, int quantity){
-
-        for(Iterator<Wish> w = this.getWishs(); w.hasNext();){
-            if(w.next().getPID() == pid){
-                if(w.next().getQuantity() - quantity <= 0 || quantity == Integer.MAX_VALUE){
-                    w.remove();
-                }
-                else{
-                    w.next().setQuantity(w.next().getQuantity() - quantity);
-                }
-                return true;
+    public boolean removeWish(int pid){
+        for(Wish w : wishs){
+            if(w.getPID() == pid){
+                return wishs.remove(w);
             }
         }
         return false;
-    }
-    
-    public Iterator getWishs(){
+    }    
+    public Iterator<Wish> getWishs(){
         return wishs.iterator();
     }
 

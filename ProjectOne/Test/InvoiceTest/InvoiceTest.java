@@ -33,7 +33,5 @@ public class InvoiceTest {
         }
         System.out.println("\nInvoice Information\n" + InvoiceList.toString());
 
-       
-
     }
 }
