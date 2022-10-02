@@ -42,7 +42,7 @@ public class WishList implements Serializable{
 
         for(Iterator<Wish> w = this.getWishs(); w.hasNext();){
             if(w.next().getPID() == pid){
-                if(w.next().getQuantity() - quantity <= 0){
+                if(w.next().getQuantity() - quantity <= 0 || quantity == Integer.MAX_VALUE){
                     w.remove();
                 }
                 else{

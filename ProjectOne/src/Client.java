@@ -49,7 +49,7 @@ public class Client implements Serializable {
     this.address = newAddress;
   }
   
-  public Wish addWish(int pid, int quantity, double price){
+  public boolean addWish(int pid, int quantity, double price){
     return wishlist.addWish(new Wish(pid, quantity, price));
   }
 
@@ -75,6 +75,10 @@ public class Client implements Serializable {
 
   public double makePayment(double payment){
     return transactHist.makePayment(payment);
+  }
+
+  public double getBalance(){
+    return transactHist.getBalance();
   }
 
   public Iterator getTransactions(){

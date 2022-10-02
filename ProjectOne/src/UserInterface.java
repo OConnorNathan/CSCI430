@@ -25,7 +25,7 @@ public class UserInterface {
   private static final int VIEW_INVENTORY = 3;
   private static final int ADD_ITEM_WISHLIST = 4;
   private static final int REMOVE_ITEM_WISHLIST = 5;
-  private static final int SHOW_CLIENT_WISHLIST = 6
+  private static final int SHOW_CLIENT_WISHLIST = 6;
   private static final int ADD_SHIPMENT = 7;
   private static final int MAKE_PAY = 8;
   private static final int MAKE_ORDER = 9;
@@ -109,27 +109,27 @@ public class UserInterface {
   }
 
   public void help() {
-    System.out.println("Enter a number between 0 and 15 as explained below:");
-    System.out.println(EXIT + " to Exit\n");
-    System.out.println(ADD_CLIENT + " to add a client");
-    System.out.println(ADD_PRODUCT + " to  add product");
-    System.out.println(VIEW_INVENTORY + " to view products in inventory");
-    System.out.println(ADD_ITEM_WISHLIST + " to add item to wishlist");
-    System.out.println(REMOVE_ITEM_WISHLIST + " to remove an item from wihslist");
-    System.out.println(ADD_SHIPMENT + " add shipment invoice for shipping");
-    System.out.println(MAKE_PAY + " to make payment of the balance");
-    System.out.println(MAKE_ORDER + " will make an order in transaction and updates the clients balance");
-    System.out.println(GET_OUTSTANDING_BALANCES + "shows the outstanding balance of invoioce");
-    System.out.println(GET_TRANSACTIONS + " to  print transactions");
-    System.out.println(SHOW_CLIENTS + " print a list of the clients");
-    System.out.println(SHOW_INVOICES + " prints the invoices");
-    System.out.println(SAVE + " to  save data");
-    System.out.println(RETRIEVE + " to  retrieve");
-    System.out.println(HELP + " for help");
+    System.out.println("Enter a number between 0 and 16 as explained below:");
+    System.out.println(EXIT + " Exit\n");
+    System.out.println(ADD_CLIENT + " Add Client");
+    System.out.println(ADD_PRODUCT + " Add Product");
+    System.out.println(VIEW_INVENTORY + " Show Inventory");
+    System.out.println(ADD_ITEM_WISHLIST + " Add Product to a Wishlist");
+    System.out.println(REMOVE_ITEM_WISHLIST + " Remove a Product From a Wishlist");
+    System.out.println(ADD_SHIPMENT + " Add a Shipment");
+    System.out.println(MAKE_PAY + " Make a Payment Towards a Balance");
+    System.out.println(MAKE_ORDER + " Order From a Wishlist");
+    System.out.println(GET_OUTSTANDING_BALANCES + " Find All Outstanding Balances");
+    System.out.println(GET_TRANSACTIONS + " Find All Transactions of a Client");
+    System.out.println(SHOW_CLIENTS + " Show All Clients");
+    System.out.println(SHOW_INVOICES + " Show All Invoices");
+    System.out.println(SAVE + " Save Data");
+    System.out.println(RETRIEVE + " Retrieve Data");
+    System.out.println(HELP + " Help");
   }
 
   public void addClient() {
-    String name = getToken("Enter member name");
+    String name = getToken("Enter Client name");
     String address = getToken("Enter address");
     Client result;
     result = database.addClient(name, address);
@@ -169,7 +169,9 @@ public class UserInterface {
     if(result == false){
       System.out.println("Failed to add wish");
     }
-    System.out.println("Wish added successfully");
+    else{
+      System.out.println("Wish added successfully");
+    }
   }
 
   public void removeItemFromWishList(){
@@ -181,7 +183,9 @@ public class UserInterface {
     if(result == false){
       System.out.println("Failed to remove wish");
     }
-    System.out.println("Wish removed successfully");
+    else{
+      System.out.println("Wish removed successfully");
+    }
   }
 
   public void showClientWishList(){
@@ -202,7 +206,9 @@ public class UserInterface {
     if(result == null){
       System.out.println("Couldn't add the shipment");
     }
-    System.out.println(result);
+    else{
+      System.out.println(result);
+    }
  }
 
  public void makePayment(){
@@ -210,19 +216,37 @@ public class UserInterface {
   double payment = Double.parseDouble(getToken("Enter a payment"));
   double balance;
   balance = database.makePayment(clientID, payment);
-  if(balance == null){
-    System.out.println("Failed to make a payment");
+  if(balance == Double.MIN_VALUE){
+    System.out.println("Failed to make a payment. The payment was more than the balance.");
   }
-  System.out.println(balance);
+  else if(balance == Double.MAX_VALUE){
+    System.out.println("Failed to make a payment. The client doesn't exist.");
+  }
+  else{
+    System.out.println("New Client Balance: " + balance);
+  }
  }
  
  public void makeOrder(){
   int clientID = Integer.parseInt(getToken("Enter a client ID"));
+  database.getClientWishList(clientID);
+  List<Integer> productIDs = new ArrayList<Integer>();
+  System.out.println("Enter product IDs to be added to the order. Type 0 to stop adding");
 
+  while(true){
+    String temp = getToken("ProductID: ");
+    if(Integer.parseInt(temp) == 0){
+      break;
+    }
+    else{
+      productIDs.add(Integer.parseInt(temp));
+    }
+  }
+  database.makeOrder(clientID, productIDs);
  }
 
  public void getOustandingBalances(){
-  String result = database.getOutStandingBalances()
+  String result = database.getOutStandingBalances();
   if(result == null){
     System.out.println("No outstanding balances");
   }
@@ -231,17 +255,17 @@ public class UserInterface {
 
   public void getClientTransactions(){
       int clientID = Integer.parseInt(getToken("Enter a client ID"));
-      String result = database.getClientTransactions(clientID);
-      if(result == null){
-        System.out.println("Failed to make a payment");
+      Iterator allTransactions = database.getClientTransactions(clientID);
+      while(allTransactions.hasNext()){
+        Transaction transaction = (Transaction)(allTransactions.next());
+        System.out.println(transaction.toString());
       }
-      System.out.println(result);
   }
 
   public void showClients() {
     Iterator allClients = database.getClients();
     while (allClients.hasNext()){
-  Client client = (Client)(allClients.next());
+    Client client = (Client)(allClients.next());
         System.out.println(client.toString());
     }
   }

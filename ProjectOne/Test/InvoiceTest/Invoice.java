@@ -40,10 +40,6 @@ public class Invoice{
         return id;
     }
 
-    public String getDate(){
-        return date;
-    }
-
     public Iterator<Wish> getWishlist() {
         return wishlist.iterator();
     }

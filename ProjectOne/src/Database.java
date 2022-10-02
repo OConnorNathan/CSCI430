@@ -60,11 +60,19 @@ public class Database implements Serializable {
   }
 
   public Iterator getProducts() {
-      return inventory.getProducts();
+    return inventory.getProducts();
   }
 
   public Iterator getClients() {
-      return clientList.getClients();
+    return clientList.getClients();
+  }
+
+  public Iterator getInvoices() {
+    return invoiceHistory.getInvoices();
+  }
+
+  public Iterator getShipments() {
+    return shipmentList.getShipments();
   }
 
   public boolean addWishListItem(int clientID, int productID, int quantity){
@@ -82,25 +90,112 @@ public class Database implements Serializable {
     return false;
   }
 
-  public Wish removeWishListItem(int clientID, int productID){
-    Client client = clientList.findClient(clientID);
-    Product product = inventory.searchInventory(productID);
-    if(client == null || product == null){
-      return null;
+  public boolean removeWishListItem(int clientID, int productID, int quantity){
+    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
+      if(c.next().getCID() == clientID){
+        c.next().removeWish(productID, quantity);
+        return true;
+      }
     }
-    else{
-      for(final Iterator<Wish> w = client.getWishs(); w.hasNext();){
-        final Wish value = w.next();
-        if(value.getPID() == productID){
-            return value;
-        }
+    return false;
+  }
+
+  public Iterator getClientWishList(int clientID){
+    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
+      final Client client = c.next();
+      if(client.getCID() == clientID){
+        return client.getWishs();
       }
     }
     return null;
   }
+
+  public Shipment addShipment(int productID, int quantity, double price) {
+    Shipment shipment = new Shipment(productID, quantity, price);
+    if (shipmentList.insertShipment(shipment)) {
+      return shipment;
+    } return null;
+  }
+
+
+  public double makePayment(int clientID, double payment){
+    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
+      final Client client = c.next();
+      if(client.getCID() == clientID){
+        if(client.makePayment(payment) < 0){
+          return Double.MIN_VALUE;
+        }
+        return client.makePayment(payment);
+      }
+    }
+    return Double.MAX_VALUE;
+  }
+
+  public void makeOrder(int clientID, List<Integer> productIDs){
+    List<Wish> orderWishList = new ArrayList<Wish>();
+    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
+      final Client client = c.next();
+      if(client.getCID() == clientID){
+        for(Iterator<Wish> w = client.getWishs(); w.hasNext();){
+          for(int i = 0; i < productIDs.size(); i++){
+            if(w.next().getPID() == productIDs.get(i)){
+              orderWishList.add(w.next());
+              client.removeWish(clientID, Integer.MAX_VALUE);
+            }
+          }
+        }
+        for(Iterator<Product> p = inventory.getProducts(); p.hasNext();){
+          for(int i = 0; i < orderWishList.size(); i++){
+            if(orderWishList.get(i).getPID() == p.next().getPID()){
+              if(p.next().getQuant() - orderWishList.get(i).getQuantity() < 0){
+                int overQuantity = p.next().getQuant() - orderWishList.get(i).getQuantity();
+                p.next().addWait(new Wait(client.getCID(), (overQuantity * -1)));
+                orderWishList.get(i).setQuantity(orderWishList.get(i).getQuantity() + overQuantity);
+                p.next().setQuant(0);
+              }
+              else{
+                p.next().setQuant(p.next().getQuant() - orderWishList.get(i).getQuantity());
+              }
+            }
+          }
+        }
+        double total = 0;
+        for(Wish w: orderWishList){
+          total += (w.getPrice() * w.getQuantity());
+        }
+        Invoice invoice = new Invoice(java.time.LocalDate.now().toString(), orderWishList, total);
+        invoiceHistory.insertInvoice(invoice);
+        
+        client.addTransaction(invoice.getDate(), 1, invoice.getId(), invoice.getTotal());
+      }
+    }
+  }
+
+  public String getOutStandingBalances(){
+    String clientBalances = new String();
+    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
+      final Client client = c.next();
+      if(client.getBalance() != 0){
+        clientBalances += client.getCID() + ": " + client.getBalance();
+      }
+    }
+    return clientBalances;
+  }
+
+  public Iterator getClientTransactions(int clientID){
+    for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
+      final Client client = c.next();
+      if(client.getCID() == clientID){
+        return client.getTransactions();
+      }
+    }
+    return null;
+  }
+
+  
   public static Database retrieve() {
     try {
-      FileInputStream file = new FileInputStream("LibraryData");
+      FileInputStream file = new FileInputStream("DatabaseData");
       ObjectInputStream input = new ObjectInputStream(file);
       input.readObject();
       ClientIdServer.retrieve(input);
@@ -113,9 +208,9 @@ public class Database implements Serializable {
       return null;
     }
   }
-  public static  boolean save() {
+  public static boolean save() {
     try {
-      FileOutputStream file = new FileOutputStream("LibraryData");
+      FileOutputStream file = new FileOutputStream("DatabaseData");
       ObjectOutputStream output = new ObjectOutputStream(file);
       output.writeObject(database);
       output.writeObject(ClientIdServer.instance());

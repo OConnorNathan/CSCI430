@@ -71,5 +71,4 @@ public class ShipmentList implements Serializable {
     public String toString() {
         return shipments.toString();
     }
-
 }

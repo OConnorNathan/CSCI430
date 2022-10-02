@@ -60,15 +60,16 @@ public class Shipment implements Serializable {
         this.price = price;
     }
 
-    public double makePayment(double payment) {
-        return shipmentHist.makePayment(payment);
-    }
+    // public double makePayment(double payment) {
+    //     return shipmentHist.makePayment(payment);
+    // }
 
     // converting Shipment to string ouput
     public String toString() {
         // String string = shipmentID + " " + productID + " " + shipmentHist.toString();
         return " | ShipmentID: " + shipmentID + " | ProductID: " + productID + " | Quantity: " + quantity + " | Price: "
-                + price + " | " + shipmentHist.toString();
+                + price; 
+                // + " | " + shipmentHist.toString();
     }
 
 }

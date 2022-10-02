@@ -12,9 +12,10 @@
  * 
  *******************************************************************/
 
+import java.io.Serializable;
 import java.util.*;
 
-public class TransactionHistory {
+public class TransactionHistory implements Serializable{
     
     private LinkedList<Transaction> transactions;
     private double balance;

@@ -18,30 +18,29 @@ import java.io.Serializable;
 import java.util.*;
 
 public class ShipmentHistory implements Serializable {
-
     private LinkedList<Shipment> shipments;
-    private double payment;
+    //private double payment;
 
     public ShipmentHistory(double payment, LinkedList<Shipment> shipments) {
         this.shipments = shipments;
-        this.payment = payment;
+        //this.payment = payment;
     }
 
     public ShipmentHistory() {
         shipments = new LinkedList<Shipment>();
-        payment = 0;
+        //payment = 0;
     }
 
     public Iterator getShipments() {
         return shipments.iterator();
     }
 
-    public double makePayment(double balance) {
-        payment = payment + balance;
-        return payment;
-    }
+    // public double makePayment(double balance) {
+    //     payment = payment + balance;
+    //     return payment;
+    // }
 
-    public String toString() {
-        return "Payment: " + payment;
-    }
+    // public String toString() {
+    //     return "Payment: " + payment;
+    // }
 }

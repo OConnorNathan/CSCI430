@@ -11,9 +11,8 @@
  * Based On: Book.java by Dr. Ramnath Sarnath
  * 
  *******************************************************************/
-
 import java.io.*;
-
+import java.util.*;
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
     private int pid;
@@ -21,6 +20,7 @@ public class Product implements Serializable {
     private int quantity;
     private float price;
     private float wholesalePrice;
+    private Waitlist waitlist = new Waitlist();
   
   
     public Product(String description, int quantity, float price, float wholesalePrice){
@@ -46,6 +46,16 @@ public class Product implements Serializable {
     public float getWSPrice(){
         return wholesalePrice;
     }
+    public Iterator<Wait> getWaits(){
+        return waitlist.getWaits();
+    }
+
+    public boolean addWait(Wait wait){
+        return waitlist.insertWait(wait);
+    }
+    public boolean fulfillWait(Wait wait){
+        return waitlist.fulfillWait(wait);
+    }
 
     public boolean setDesc(String description){
         this.description = description;
@@ -65,6 +75,9 @@ public class Product implements Serializable {
     }
 
     public String toString(){
-        return "pid: " + pid + "description: " + description + "quantity: " + quantity + "price: " + price + "wholesale price: " + wholesalePrice;
+        return "pid: " + pid + "description: " + description + 
+                "quantity: " + quantity + "price: " + price + 
+                "wholesale price: " + wholesalePrice + 
+                "waitlist: " + waitlist.toString();
     }
 }
