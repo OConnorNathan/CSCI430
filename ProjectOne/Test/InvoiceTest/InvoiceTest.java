@@ -23,7 +23,7 @@ public class InvoiceTest {
         Invoice s2 = new Invoice("9/15/20", 110, 111, "Tablet");
 
     
-        InvoiceList InvoiceList = InvoiceList.instance();
+        InvoiceList invoiceList = invoiceList.instance();
         if (InvoiceList.insertInvoice(s1)) {
             System.out.println("S1 Inserted into InvoiceList");
         }
@@ -31,7 +31,7 @@ public class InvoiceTest {
         if (InvoiceList.insertInvoice(s2)) {
             System.out.println("S2 Inserted into InvoiceList");
         }
-        System.out.println("\nInvoice Information\n" + InvoiceList.toString());
+        System.out.println("\nInvoice Information\n" + invoiceList.toString());
 
     }
 }

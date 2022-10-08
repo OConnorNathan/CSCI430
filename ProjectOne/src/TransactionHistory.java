@@ -30,7 +30,12 @@ public class TransactionHistory implements Serializable{
     }
 
     public boolean addTransaction(Transaction transact){
-        balance += transact.getDollarAmount();
+        if(transact.getType() == 1){
+            balance += transact.getDollarAmount();
+        }
+        else if(transact.getType() == 0){
+            balance -= transact.getDollarAmount();
+        }
         return transactions.add(transact);
     }
 
@@ -43,14 +48,9 @@ public class TransactionHistory implements Serializable{
         }
         return false;
     }
-    
+
     public Iterator<Transaction> getTransactions(){
         return transactions.iterator();
-    }
-
-    public double makePayment(double payment){
-        balance = balance - payment;
-        return balance;
     }
 
     public double getBalance(){

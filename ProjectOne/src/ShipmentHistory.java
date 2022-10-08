@@ -31,7 +31,7 @@ public class ShipmentHistory implements Serializable {
         //payment = 0;
     }
 
-    public Iterator getShipments() {
+    public Iterator<Shipment> getShipments() {
         return shipments.iterator();
     }
 

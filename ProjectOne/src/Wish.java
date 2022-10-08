@@ -14,35 +14,43 @@
 
 import java.io.*;
 
-public class Wish implements Serializable{
+public class Wish implements Serializable, Cloneable{
     private static final long serialVersionUID = 1L;
     private int pid;
     private int quantity;
     private double price;
 
+    public Wish clone() throws CloneNotSupportedException{
+        return (Wish) super.clone();
+    }
+    
     public Wish(int pid, int quantity, double price){
         this.pid = pid;
         this.quantity = quantity;
         this.price = price;
     }
+
     public void setPID(int pid){
         this.pid = pid;
     }
+
     public void setQuantity(int quantity){
+        this.price = (this.price / this.quantity) * quantity;
         this.quantity = quantity;
     }
-    public void setPrice(double price){
-        this.price = price;
-    }
+
     public int getPID(){
         return pid;
     }
+
     public int getQuantity(){
         return quantity;
     }
+
     public double getPrice(){
         return price;
     }
+
     public String toString(){
         return "ProductID: " + pid + ", Quantity: " + quantity + ", Price: " + price + " ";
     }

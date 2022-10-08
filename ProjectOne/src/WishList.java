@@ -25,7 +25,7 @@ public class WishList implements Serializable{
     public WishList(){
         wishs = new LinkedList<Wish>();
     }
-
+    
     public Wish findWish(int pid){
         for(Wish w: wishs){
             if(w.getPID() == pid){
@@ -45,9 +45,14 @@ public class WishList implements Serializable{
             }
         }
         return false;
-    }    
-    public Iterator<Wish> getWishs(){
-        return wishs.iterator();
+    }
+
+    public Iterator<Wish> getWishs() throws CloneNotSupportedException{
+        LinkedList<Wish> temp = new LinkedList<Wish>();
+        for (Wish W: wishs){
+            temp.add(W.clone());
+        }
+        return temp.iterator();
     }
 
     public String toString(){

@@ -61,7 +61,7 @@ public class Client implements Serializable {
     return wishlist.findWish(pid);
   }
 
-  public Iterator<Wish> getWishs(){
+  public Iterator<Wish> getWishs() throws CloneNotSupportedException{
     return wishlist.getWishs();
   }
   
@@ -77,10 +77,6 @@ public class Client implements Serializable {
     return transactHist.removeTransaction(invoiceID);
   }
 
-  public double makePayment(double payment){
-    return transactHist.makePayment(payment);
-  }
-
   public double getBalance(){
     return transactHist.getBalance();
   }
@@ -90,7 +86,7 @@ public class Client implements Serializable {
   }
 
   public String toString() {
-    String string = "ClientID: " + cid + ", Name: " + name + ", Address: " + address + " " + wishlist.toString() + transactHist.toString() + "\n";
+    String string = "ClientID: " + cid + ", Name: " + name + ", Address: " + address + "\n";
     return string;
   }
 

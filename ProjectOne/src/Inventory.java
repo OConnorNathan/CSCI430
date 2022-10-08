@@ -34,7 +34,7 @@ public class Inventory implements Serializable {
       return true;
   }
 
-  public Product searchInventory(int pid){
+  public Product findProduct(int pid){
     for (int i = 0; i < products.size(); i++){
       if (products.get(i).getPID() == pid){
         return products.get(i);
@@ -43,7 +43,7 @@ public class Inventory implements Serializable {
     return null;
   }
 
-  public Product searchInventory(String description){
+  public Product findProduct(String description){
     for(int i = 0; i < products.size(); i++){
       if (products.get(i).getDesc() == description){
         return products.get(i);

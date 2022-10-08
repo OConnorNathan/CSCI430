@@ -40,6 +40,15 @@ public class InvoiceHistory implements Serializable {
     public Iterator<Invoice> getInvoices(){
          return invoices.iterator();
     }
+
+    public Invoice findInvoice(int invID){
+      for(int i = 0; i < invoices.size(); i++){
+        if (invoices.get(i).getID() == invID){
+          return invoices.get(i);
+        }
+      }
+      return null;
+    }
       
     private void writeObject(java.io.ObjectOutputStream output) {
         try {

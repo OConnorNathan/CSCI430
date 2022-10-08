@@ -17,12 +17,14 @@ import java.util.*;
 public class Invoice implements Serializable{
     
     private String date;
+    private int cid;
     private double total;
     private int id;
     private List<Wish> wishlist = new LinkedList<Wish>();
 
-    public Invoice(String date, List<Wish> wishlist, double total) {
+    public Invoice(String date, int cid, List<Wish> wishlist, double total) {
         this.date = date;
+        this.cid = cid;
         this.id = InvoiceIdServer.instance().getId();
         this.total = total;
         this.wishlist = wishlist;
@@ -36,7 +38,7 @@ public class Invoice implements Serializable{
         this.total = total;
     }
 
-    public int getId() {
+    public int getID() {
         return id;
     }
 
@@ -53,6 +55,6 @@ public class Invoice implements Serializable{
     }
 
     public String toString(){
-        return "date: " + date + "id: " + id + "total: " + total + "Items: " + wishlist.toString();
+        return "date: " + date + " id: " + id + " Client: " + cid + " total: " + total + " Items: " + wishlist.toString() + "\n";
     }
 }
