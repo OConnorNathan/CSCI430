@@ -25,21 +25,23 @@ public class UserInterface {
   private static final int EXIT = 0;
   private static final int ADD_CLIENT = 1;
   private static final int ADD_PRODUCT = 2;
-  private static final int VIEW_INVENTORY = 3;
+  private static final int ADD_SHIPMENT = 3;
   private static final int ADD_ITEM_WISHLIST = 4;
   private static final int REMOVE_ITEM_WISHLIST = 5;
-  private static final int SHOW_CLIENT_WISHLIST = 6;
-  private static final int ADD_SHIPMENT = 7;
-  private static final int MAKE_PAY = 8;
-  private static final int MAKE_ORDER = 9;
-  private static final int GET_OUTSTANDING_BALANCES = 10;
-  private static final int GET_TRANSACTIONS = 11;
-  private static final int SHOW_CLIENTS = 12;
-  private static final int SHOW_INVOICES = 13;
-  private static final int FIND_INVOICES = 14;
-  private static final int SAVE = 15;
-  private static final int RETRIEVE = 16;
-  private static final int HELP = 17;
+  private static final int MAKE_PAY = 6;
+  private static final int MAKE_ORDER = 7;
+  private static final int SHOW_CLIENTS = 8;
+  private static final int VIEW_INVENTORY = 9;
+  private static final int SHOW_INVOICES = 10;
+  private static final int SHOW_SHIPMENTS = 11;
+  private static final int GET_OUTSTANDING_BALANCES = 12;
+  private static final int GET_TRANSACTIONS = 13;
+  private static final int SHOW_CLIENT_WISHLIST = 14;
+  private static final int FIND_INVOICES = 15;
+  private static final int FIND_SHIPMENT = 16;
+  private static final int SAVE = 17;
+  private static final int RETRIEVE = 18;
+  private static final int HELP = 19;
 
   /* CONSTRUCTORS */
 
@@ -104,22 +106,24 @@ public class UserInterface {
   }
 
   public void help() {
-    System.out.println("Enter a number between 0 and 17 as explained below:");
+    System.out.println("Enter a number between 0 and 18 as explained below:");
     System.out.println(EXIT + " Exit\n");
     System.out.println(ADD_CLIENT + " Add Client");
     System.out.println(ADD_PRODUCT + " Add Product");
-    System.out.println(VIEW_INVENTORY + " Show Inventory");
+    System.out.println(ADD_SHIPMENT + " Add Shipment");
     System.out.println(ADD_ITEM_WISHLIST + " Add Product to a Wishlist");
     System.out.println(REMOVE_ITEM_WISHLIST + " Remove a Product From a Wishlist");
-    System.out.println(SHOW_CLIENT_WISHLIST + " Show Client Wishlist");
-    System.out.println(ADD_SHIPMENT + " Add a Shipment");
     System.out.println(MAKE_PAY + " Make a Payment Towards a Balance");
     System.out.println(MAKE_ORDER + " Order From a Wishlist");
+    System.out.println(SHOW_CLIENTS + " Show All Clients");
+    System.out.println(VIEW_INVENTORY + " Show All Products");
+    System.out.println(SHOW_INVOICES + " Show All Invoices");
+    System.out.println(SHOW_SHIPMENTS + " Show All Shipments");
     System.out.println(GET_OUTSTANDING_BALANCES + " Find All Outstanding Balances");
     System.out.println(GET_TRANSACTIONS + " Find All Transactions of a Client");
-    System.out.println(SHOW_CLIENTS + " Show All Clients");
-    System.out.println(SHOW_INVOICES + " Show All Invoices");
+    System.out.println(SHOW_CLIENT_WISHLIST + " Show Client Wishlist");
     System.out.println(FIND_INVOICES + " Find a Specific Invoice");
+    System.out.println(FIND_SHIPMENT + " Find a Specific Shipment");
     System.out.println(SAVE + " Save Data");
     System.out.println(RETRIEVE + " Retrieve Data");
     System.out.println(HELP + " Help");
@@ -159,6 +163,10 @@ public class UserInterface {
                                 break;
         case FIND_INVOICES:     findInvoice();
                                 break;
+        case SHOW_SHIPMENTS:    showShipments();
+                                break;
+        case FIND_SHIPMENT:     findShipment();;
+                                break;
         case SAVE:              save();
                                 break;
         case RETRIEVE:	        retrieve();
@@ -185,8 +193,8 @@ public class UserInterface {
   public void addProduct(){
     String description = getToken("Enter a description");
     int quantity = Integer.parseInt(getToken("Enter a quantity"));
-    float price = Float.parseFloat(getToken("Enter the individual price"));
-    float wholesalePrice = Float.parseFloat(getToken("Enter the whole sale price"));
+    double price = Double.parseDouble(getToken("Enter the individual price"));
+    double wholesalePrice = Double.parseDouble(getToken("Enter the whole sale price"));
     Product result;
     result = database.addProduct(description, quantity, price, wholesalePrice);
     if(result == null){
@@ -259,6 +267,24 @@ public class UserInterface {
     }
   }
 
+  public void showShipments(){
+    Iterator<Shipment> allShipments = database.getShipments();
+    while(allShipments.hasNext()){
+      System.out.println(allShipments.next().toString());
+    }
+  }
+
+  public void findShipment(){
+    int shipmentID = Integer.parseInt(getToken("Enter an ShipmentID: "));
+    Shipment shipment = database.findShipment(shipmentID);
+    if(shipment != null){
+      System.out.println(shipment);
+    }
+    else{
+      System.out.println("Shipment does not exist");
+    }
+  }
+
   /* PRIMARY BUSINESS PROCESSES */
 
   public void addItemToWishList(){
@@ -289,20 +315,41 @@ public class UserInterface {
     }
   }
  
-  public void addShipment(){
+  public void addShipment() throws CloneNotSupportedException{
     int productID = Integer.parseInt(getToken("Enter Product ID"));
-    int quantity = Integer.parseInt(getToken("Enter a quantity"));
-    double price = Double.parseDouble(getToken("Enter the price"));
-    Shipment result;
-    result = database.acceptShipment(productID, quantity, price);
+    int shipmentQuantity = Integer.parseInt(getToken("Enter a quantity"));
+    Iterator<Wait> result;
+    result = database.acceptShipment(productID, shipmentQuantity);
     if(result == null){
-      System.out.println("Couldn't add the shipment");
+      System.out.println("This product has no waitlisted items");
     }
     else{
-      System.out.println(result);
+      while(result.hasNext() && shipmentQuantity > 0){
+        Wait waity = result.next();
+        int orderQuantity = waity.getQuantity();
+        System.out.println(waity);
+        System.out.println("Shipment Quantity: " + shipmentQuantity);
+
+        if(!yesOrNo("Do you want to skip this wait?")){
+          if(!yesOrNo("Do you want to order the existing quantity")){
+            orderQuantity = Integer.parseInt(getToken("New Quantity: "));
+          }
+          if(orderQuantity > shipmentQuantity){
+            System.out.println(database.createOrder(productID, waity.getCID(), shipmentQuantity));
+            database.addWait(waity.getCID(), productID, orderQuantity - shipmentQuantity);
+            shipmentQuantity = 0;
+          }
+          else{
+            System.out.println(database.createOrder(productID, waity.getCID(), orderQuantity));
+            shipmentQuantity -= orderQuantity;
+          }
+
+        }
+      }
+      database.updateProductQuantity(productID, shipmentQuantity);
     }
   }
-
+ 
   public void makePayment(){
     int clientID = Integer.parseInt(getToken("Enter a client ID"));
     double payment = Double.parseDouble(getToken("Enter a payment"));
@@ -331,7 +378,9 @@ public class UserInterface {
       }
     }
     Invoice invoice = database.makeOrder(clientID, orderWishList);
-    System.out.println(invoice);
+    if(invoice != null){
+      System.out.println(invoice);
+    }
   }
 
   /* DATABASE BACKUP METHODS */

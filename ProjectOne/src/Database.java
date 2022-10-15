@@ -54,7 +54,7 @@ public class Database implements Serializable {
 
   /* POPULATOR METHODS */
 
-  public Product addProduct(String description, int quantity, float price, float wholesalePrice) {
+  public Product addProduct(String description, int quantity, double price, double wholesalePrice) {
     Product product = new Product(description, quantity, price, wholesalePrice);
     if (inventory.insertProduct(product)) {
       return (product);
@@ -104,6 +104,10 @@ public class Database implements Serializable {
     return shipmentList.getShipments();
   }
 
+  public Shipment findShipment(int shipID){
+    return shipmentList.findShipment(shipID);
+  }
+
   public int checkQuant(int productID){
     return inventory.findProduct(productID).getQuant();
   }
@@ -133,7 +137,7 @@ public class Database implements Serializable {
     for(Iterator<Client> c = clientList.getClients(); c.hasNext();){
       final Client client = c.next();
       if(client.getBalance() > 0){
-        clientBalances += client.getCID() + ": " + client.getBalance() + "\n";
+        clientBalances += client.getCID() + ": $" + client.getBalance() + "\n";
       }
     }
     return clientBalances;
@@ -192,23 +196,56 @@ public class Database implements Serializable {
         }
         total += w.getPrice();
       }
-
-      Invoice invoice = new Invoice(java.time.LocalDate.now().toString(), client.getCID(), orderWishList, total);
-      invoiceHistory.insertInvoice(invoice);
-      
-      client.addTransaction(invoice.getDate(), 1, invoice.getID(), invoice.getTotal());
-      return invoice;
+      if(total != 0){
+        Invoice invoice = new Invoice(java.time.LocalDate.now().toString(), client.getCID(), orderWishList, total);
+        invoiceHistory.insertInvoice(invoice);
+        
+        client.addTransaction(invoice.getDate(), 1, invoice.getID(), invoice.getTotal());
+        return invoice;
+      }
     }
     return null;
   }
 
-  public Shipment acceptShipment(int productID, int quantity, double price) {
-    Shipment shipment = new Shipment(productID, quantity, price);
-    if (shipmentList.insertShipment(shipment)) {
-      /* UPDATE INVENTORY STOCK */
-      /* FULFILL WAITLIST */
-      return shipment;
-    } return null;
+  public Iterator<Wait> acceptShipment(int productID, int quantity) throws CloneNotSupportedException{
+    Product product = inventory.findProduct(productID);
+    if(product == null){
+      return null;
+    }
+
+    if (shipmentList.insertShipment(new Shipment(productID, quantity, product.getWSPrice() * quantity))) {
+      return product.getWaits();
+    } 
+    return null;
+  }
+
+  public Invoice createOrder(int pid, int cid, int quantity){
+    Invoice invoice = null;
+    List<Wish> orders = new LinkedList<Wish>();
+    Product product = inventory.findProduct(pid);
+    if(product != null){
+      product.fulfillWait(cid);
+      Client client = clientList.findClient(cid);
+      if(client != null){
+        orders.add(new Wish(pid, quantity, quantity * product.getPrice()));
+        invoice = new Invoice(java.time.LocalDate.now().toString(), cid, orders, quantity * product.getPrice());
+        invoiceHistory.insertInvoice(invoice);
+        client.addTransaction(invoice.getDate(), 1, invoice.getID(), invoice.getTotal());
+      }
+    }
+    return invoice;
+  }
+
+  public void addWait(int cid, int pid, int quantity){
+    Product product = inventory.findProduct(pid);
+    if(product != null){
+      product.addWait(new Wait(cid, quantity));
+    }
+  }
+
+  public void updateProductQuantity(int pid, int quantity){
+    Product product = inventory.findProduct(pid);
+    product.setQuant(quantity + product.getQuant());
   }
 
   /* DATABASE BACKUP METHODS */

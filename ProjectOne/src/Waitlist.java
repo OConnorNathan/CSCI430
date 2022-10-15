@@ -26,19 +26,22 @@ public class Waitlist implements Serializable{
         return true;
     }
 
-    public boolean fulfillWait(Wait wait){
-      int i = waits.indexOf(wait);
-      if (i != -1){
-        waits.remove(i);
-        return true;
+    public boolean fulfillWait(int cid){
+      for(Wait w: waits){
+        if(w.getCID() == cid){
+          waits.remove(w);
+          return true;
+        }
       }
-      else{
-        return false;
-      }
+      return false;
     }
 
-    public Iterator<Wait> getWaits(){
-        return waits.iterator();
+    public Iterator<Wait> getWaits() throws CloneNotSupportedException{
+      LinkedList<Wait> temp = new LinkedList<Wait>();
+      for (Wait W: waits){
+          temp.add(W.clone());
+      }
+      return temp.iterator();
     }
 
     public String toString(){

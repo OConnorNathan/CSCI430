@@ -40,6 +40,15 @@ public class ShipmentList implements Serializable {
         return shipments.iterator();
     }
 
+    public Shipment findShipment(int shipID){
+        for(int i = 0; i < shipments.size(); i++){
+          if (shipments.get(i).getShipmentId() == shipID){
+            return shipments.get(i);
+          }
+        }
+        return null;
+      }
+
     private void writeObject(java.io.ObjectOutputStream output) {
         try {
             output.defaultWriteObject();

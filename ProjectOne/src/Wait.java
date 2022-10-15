@@ -13,11 +13,14 @@
  *******************************************************************/
 import java.io.*;
 
-public class Wait implements Serializable{
+public class Wait implements Serializable, Cloneable{
     private static final long serialVersionUID = 1L;
     private int cid;
     private int quantity;
 
+    public Wait clone() throws CloneNotSupportedException{
+        return (Wait) super.clone();
+    }
     public Wait(int cid, int quantity){
         this.cid = cid;
         this.quantity = quantity;

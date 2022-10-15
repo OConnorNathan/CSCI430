@@ -48,15 +48,15 @@ public class Product implements Serializable {
     public double getWSPrice(){
         return wholesalePrice;
     }
-    public Iterator<Wait> getWaits(){
+    public Iterator<Wait> getWaits()throws CloneNotSupportedException{
         return waitlist.getWaits();
     }
 
     public boolean addWait(Wait wait){
         return waitlist.insertWait(wait);
     }
-    public boolean fulfillWait(Wait wait){
-        return waitlist.fulfillWait(wait);
+    public boolean fulfillWait(int cid){
+        return waitlist.fulfillWait(cid);
     }
 
     public boolean setDesc(String description){
@@ -67,12 +67,12 @@ public class Product implements Serializable {
         this.quantity = quantity;
         return true;
     }
-    public boolean setPrice(float price){
+    public boolean setPrice(double price){
         this.price = price;
         return true;
     }
-    public boolean setWSPrice(float wholesalePrice){
-        this.wholesalePrice = wholesalePrice;
+    public boolean setWSPrice(double wholeSalePrice){
+        this.wholesalePrice = wholeSalePrice;
         return true;
     }
 
