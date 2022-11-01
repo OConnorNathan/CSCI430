@@ -1,8 +1,6 @@
 package UserInterface;
 
 import java.util.*;
-import java.text.*;
-import java.io.*;
 import BackEnd.*;
 
 public class ClerkState extends WhState {
@@ -11,14 +9,13 @@ public class ClerkState extends WhState {
   private static ClerkState instance;
   private static final int EXIT = 0;
   private static final int ADD_CLIENT = 1;
-  private static final int MAKE_PAY = 6;
-  private static final int SHOW_CLIENTS = 8;
-  private static final int VIEW_INVENTORY = 9;
-  private static final int GET_OUTSTANDING_BALANCES = 12;
-  private static final int HELP = 19;
-
-  private static final int CLIENT_VIEW = 20;
-  private static final int SHOW_WAITLIST = 21;
+  private static final int MAKE_PAY = 2;
+  private static final int SHOW_CLIENTS = 3;
+  private static final int VIEW_INVENTORY = 4;
+  private static final int GET_OUTSTANDING_BALANCES = 5;
+  private static final int CLIENT_VIEW = 6;
+  private static final int SHOW_WAITLIST = 7;
+  private static final int HELP = 8;
 
   private ClerkState() {
       super();
@@ -46,32 +43,84 @@ public class ClerkState extends WhState {
     } while (true);
   }
 
-  public void help() {
-    System.out.println("Enter a number between 0 and 12 as explained below:");
-    System.out.println(EXIT + " to Exit\n");
-    System.out.println(ADD_CLIENT + " to add a client");
-    System.out.println(MAKE_PAY + " to  make payment");
-    System.out.println(SHOW_CLIENTS + " to list all clients ");
-    System.out.println(VIEW_INVENTORY + " to view the entire inventory");
-    System.out.println(GET_OUTSTANDING_BALANCES + "displays the outstanding balance ");
-    System.out.println(USERMENU + " to  switch to the user menu");
-    System.out.println(HELP + " for help");
+  public void addClient() {
+    String name = UIHelper.getToken("Enter Client name");
+    String address = UIHelper.getToken("Enter address");
+    Client result;
+    result = database.addClient(name, address);
+    if (result == null) {
+      System.out.println("Could not add member");
+    }
+    System.out.println(result);
   }
 
-  public void usermenu()
-  {
-    String userID = UIHelper.getToken("Please input the user id: ");
-    if (Database.instance().searchMembership(userID) != null){
-      (WhContext.instance()).setUser(userID);      
-      (WhContext.instance()).changeState(1);
+  public void showInventory(){
+    Iterator<Product> allProducts = database.getProducts();
+    while(allProducts.hasNext()){
+      Product product = (Product)(allProducts.next());
+      System.out.println(product.toString());
+    }
+  }
+
+  public void showClients() {
+    Iterator<Client> allClients = database.getClients();
+    while (allClients.hasNext()){
+    Client client = (Client)(allClients.next());
+        System.out.println(client.toString());
+    }
+  }
+
+  public void getOustandingBalances(){
+    String result = database.getOutStandingBalances();
+    if(result == null){
+      System.out.println("No outstanding balances");
+    }
+    System.out.println(result);
+   }
+
+   public void makePayment(){
+    int clientID = Integer.parseInt(UIHelper.getToken("Enter a client ID"));
+    double payment = Double.parseDouble(UIHelper.getToken("Enter a payment"));
+    double balance;
+    balance = database.makePayment(clientID, payment);
+    System.out.println("New Client Balance: " + balance);
+  }
+   
+  public void clientView(){
+    int userID = Integer.parseInt(UIHelper.getToken("Please input the client id: "));
+    if (Database.instance().findClient(userID) != null){
+      (WhContext.instance()).setClient(userID);      
+      (WhContext.instance()).changeState(0);
     }
     else 
       System.out.println("Invalid user id."); 
   }
 
+  public void showProductWaitlist(){
+    System.out.println(database.findProduct(Integer.parseInt(UIHelper.getToken("Enter a pid: "))).toString());
+  }
+
+  public void help() {
+    System.out.println("Enter a number between 0 and 8 as explained below:");
+    System.out.println(EXIT + " to Exit\n");
+    System.out.println(ADD_CLIENT + " to add a client");
+    System.out.println(MAKE_PAY + " to make payment");
+    System.out.println(SHOW_CLIENTS + " to list all clients ");
+    System.out.println(VIEW_INVENTORY + " to view the entire inventory");
+    System.out.println(GET_OUTSTANDING_BALANCES + " to display outstanding balances");
+    System.out.println(CLIENT_VIEW + " to switch to the user menu");
+    System.out.println(SHOW_WAITLIST + " to show the waitlist for a product");
+    System.out.println(HELP + " for help");
+  }
+
   public void logout()
   {
-    (WhContext.instance()).changeState(0); // exit with a code 0
+    if ((WhContext.instance()).getLogin() == WhContext.IsManager){
+      (WhContext.instance()).changeState(2);
+    }
+    else{
+      (WhContext.instance()).changeState(3);
+    }
   }
  
 
@@ -80,17 +129,20 @@ public class ClerkState extends WhState {
     help();
     while ((command = getCommand()) != EXIT) {
       switch (command) {
-        case ADD_MEMBER:        addMember();
+        case ADD_CLIENT:        addClient();
                                 break;
-        case ADD_BOOKS:         addBooks();
+        case MAKE_PAY:          makePayment();
                                 break;
-        case RETURN_BOOKS:      returnBooks();
+        case SHOW_CLIENTS:      showClients();
                                 break;
-        case REMOVE_BOOKS:      removeBooks();
+        case VIEW_INVENTORY:    showInventory();
                                 break;
-        case PROCESS_HOLD:      processHolds();
+        case GET_OUTSTANDING_BALANCES:      
+                                getOustandingBalances();
                                 break;
-        case USERMENU:          usermenu();
+        case CLIENT_VIEW:       clientView();
+                                break;
+        case SHOW_WAITLIST:     showProductWaitlist();
                                 break;
         case HELP:              help();
                                 break;

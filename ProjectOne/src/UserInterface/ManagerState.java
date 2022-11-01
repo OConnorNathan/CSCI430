@@ -112,16 +112,9 @@ public class ManagerState extends WhState{
     }
   }
 
-  //TO DO: Implement this to go to clerkmenu
   public void clerkMenu()
-  {
-    String userID = UIHelper.getToken("Please input the user id: ");
-    if (Database.instance().searchMembership(userID) != null){
-      (WhContext.instance()).setUser(userID);      
+  {  
       (WhContext.instance()).changeState(1);
-    }
-    else 
-      System.out.println("Invalid user id."); 
   }
 
   public void help() {
@@ -167,17 +160,7 @@ public class ManagerState extends WhState{
         process();
   }
 
-  //TO DO: Change this for manager
   public void logout(){
-    if ((WhContext.instance()).getLogin() == WhContext.IsClerk)
-       { //stem.out.println(" going to clerk \n ");
-         (WhContext.instance()).changeState(1); // exit with a code 1
-        }
-    else if (WhContext.instance().getLogin() == WhContext.IsClient)
-       {  //stem.out.println(" going to login \n");
-        (WhContext.instance()).changeState(0); // exit with a code 2
-       }
-    else 
-       (WhContext.instance()).changeState(2); // exit code 2, indicates error
+    (WhContext.instance()).changeState(3); // exit code 2, indicates error
   }
 }

@@ -64,11 +64,12 @@ public class UserInterface {
   }
 
   /* MAIN */
-
+  /*
   public static void main(String[] s) throws CloneNotSupportedException{
     UserInterface.instance().process();
   }
-
+  */
+  
   /* I/O METHODS */
 
   public String getToken(String prompt) {

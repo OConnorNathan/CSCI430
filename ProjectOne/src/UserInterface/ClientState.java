@@ -41,19 +41,12 @@ public class ClientState extends WhState{
     } while (true);
   }
 
-  //TO DO: Modify to only show this particular client
   public void showClients() {
-    Iterator<Client> allClients = database.getClients();
-    while (allClients.hasNext()){
-    Client client = (Client)(allClients.next());
-        System.out.println(client.toString());
-    }
+    System.out.println(database.findClient(WhContext.instance().getUser()).toString());
   }
   
   public void getClientTransactions(){
-    int clientID = Integer.parseInt(UIHelper.getToken("Enter a client ID"));
-    Iterator<Transaction> allTransactions = database.getClientTransactions(clientID);
-    System.out.println("If the Type is 1 it is an order. If it is 0 it is a payment");
+    Iterator<Transaction> allTransactions = database.getClientTransactions(WhContext.instance().getUser());
     while(allTransactions.hasNext()){
       Transaction transaction = (Transaction)(allTransactions.next());
       System.out.println(transaction.toString());
@@ -61,7 +54,7 @@ public class ClientState extends WhState{
 }
 
   public void showClientWaitlist(){
-
+    System.out.println(database.getClientWaits(WhContext.instance().getUser()));
 }
 
   public void showInventory(){
@@ -73,8 +66,7 @@ public class ClientState extends WhState{
   }
 
     public void showClientWishList(){
-        int clientID = Integer.parseInt(UIHelper.getToken("Enter a Client ID"));
-        Iterator<Wish> wishlist = database.getClientWishList(clientID);
+        Iterator<Wish> wishlist = database.getClientWishList(WhContext.instance().getUser());
         while(wishlist.hasNext()){
         Wish wish = (Wish)(wishlist.next());
         System.out.println(wish.toString());
@@ -82,11 +74,10 @@ public class ClientState extends WhState{
     }
 
   public void addItemToWishList(){
-    int clientID = Integer.parseInt(UIHelper.getToken("Enter a Client ID"));
     int productID = Integer.parseInt(UIHelper.getToken("Enter a product ID"));
     int quantity = Integer.parseInt(UIHelper.getToken("Enter a quantity"));
     boolean result;
-    result = database.addWishListItem(clientID, productID, quantity);
+    result = database.addWishListItem(WhContext.instance().getUser(), productID, quantity);
     if(result == false){
       System.out.println("Failed to add wish");
     }
@@ -96,11 +87,10 @@ public class ClientState extends WhState{
   }
 
   public void removeItemFromWishList(){
-    int clientID = Integer.parseInt(UIHelper.getToken("Enter a Client ID"));
     int productID = Integer.parseInt(UIHelper.getToken("Enter a product ID"));
     int quantity = Integer.parseInt(UIHelper.getToken("Enter a quantity"));
     boolean result;
-    result = database.removeWishListItem(clientID, productID, quantity);
+    result = database.removeWishListItem(WhContext.instance().getUser(), productID, quantity);
     if(result == false){
       System.out.println("Failed to remove wish");
     }
@@ -110,8 +100,7 @@ public class ClientState extends WhState{
   }
  
   public void makeOrder(){
-    int clientID = Integer.parseInt(UIHelper.getToken("Enter a client ID"));
-    Iterator<Wish> wishs = database.getClientWishList(clientID);
+    Iterator<Wish> wishs = database.getClientWishList(WhContext.instance().getUser());
     LinkedList<Wish> orderWishList = new LinkedList<Wish>();
     while(wishs.hasNext()){
       Wish wishy = wishs.next();
@@ -119,7 +108,7 @@ public class ClientState extends WhState{
       System.out.println("Product in Stock Quantity: " + database.checkQuant(wishy.getPID()));
 
       if(UIHelper.yesOrNo("Do you want to add the wish to the order?")){
-        database.removeWishListItem(clientID, wishy.getPID(), wishy.getQuantity());
+        database.removeWishListItem(WhContext.instance().getUser(), wishy.getPID(), wishy.getQuantity());
       
         if(!UIHelper.yesOrNo("Do you want to add the whole wish to the order?")){
           int newQuant = Integer.parseInt(UIHelper.getToken("Enter a new quantity: "));
@@ -128,7 +117,7 @@ public class ClientState extends WhState{
         orderWishList.add(wishy);
       }
     }
-    Invoice invoice = database.makeOrder(clientID, orderWishList);
+    Invoice invoice = database.makeOrder(WhContext.instance().getUser(), orderWishList);
     if(invoice != null){
       System.out.println(invoice);
     }
@@ -191,16 +180,16 @@ public class ClientState extends WhState{
 
   public void logout()
   {
-    if ((WhContext.instance()).getLogin() == WhContext.IsClerk)
-       { //stem.out.println(" going to clerk \n ");
-         (WhContext.instance()).changeState(1); // exit with a code 1
+    if (((WhContext.instance()).getLogin() == WhContext.IsClerk) || (WhContext.instance().getLogin() == WhContext.IsManager))
+       { //stem.out.println(" going to clerk \n ");)
+         (WhContext.instance()).changeState(1); // Go back to clerk
         }
     else if (WhContext.instance().getLogin() == WhContext.IsClient)
        {  //stem.out.println(" going to login \n");
-        (WhContext.instance()).changeState(0); // exit with a code 2
+        (WhContext.instance()).changeState(3); //  Logout
        }
     else 
-       (WhContext.instance()).changeState(2); // exit code 2, indicates error
+       (WhContext.instance()).changeState(3); // exit code 2, indicates error
   }
  
 }

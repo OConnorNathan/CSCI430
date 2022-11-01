@@ -1,7 +1,6 @@
 package UserInterface;
 
 import java.util.*;
-import java.text.*;
 import java.io.*;
 import BackEnd.*;
 public class WhContext {
@@ -12,8 +11,8 @@ public class WhContext {
   private int currentUser;
   private int userID;
   private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-  public static final int IsClerk = 0;
-  public static final int IsClient = 1;
+  public static final int IsClient = 0;
+  public static final int IsClerk = 1;
   public static final int IsManager = 2;
   private WhState[] states;
   private int[][] nextState;
@@ -45,10 +44,10 @@ public class WhContext {
     try {
       Database tempDatabase = database.retrieve();
       if (tempDatabase != null) {
-        System.out.println(" The library has been successfully retrieved from the file LibraryData \n" );
+        System.out.println(" The database has been successfully retrieved from the file DatabaseData \n" );
         database = tempDatabase;
       } else {
-        System.out.println("File doesnt exist; creating new library" );
+        System.out.println("File doesnt exist; creating new database" );
         database = Database.instance();
       }
     } catch(Exception cnfe) {
@@ -76,15 +75,16 @@ public class WhContext {
         database = Database.instance();
     }
     // set up the FSM and transition table;
-    states = new WhState[3];
+    states = new WhState[4];
     states[0] = ClientState.instance();
     states[1] = ClerkState.instance(); 
     states[2] = ManagerState.instance();
     states[3] = LoginState.instance();
     nextState = new int[4][4];
-    nextState[0][0] = 2;nextState[0][1] = 1;nextState[0][2] = -2;
-    nextState[1][0] = 2;nextState[1][1] = 0;nextState[1][2] = -2;
-    nextState[2][0] = 0;nextState[2][1] = 1;nextState[2][2] = -1;
+    nextState[0][0] = 0;nextState[0][1] = 1;nextState[0][2] = -2;nextState[0][3] = 3;
+    nextState[1][0] = 0;nextState[1][1] = 1;nextState[1][2] = 2;nextState[1][3] = 3;
+    nextState[2][0] = -2;nextState[2][1] = 1;nextState[2][2] = 2;nextState[2][3] = 3;
+    nextState[3][0] = 0;nextState[3][1] = 1;nextState[3][2] = 2;nextState[3][3] = -1;
     currentState = 3;
   }
 
@@ -104,7 +104,7 @@ public class WhContext {
   {
    if (yesOrNo("Save data?")) {
       if (database.save()) {
-         System.out.println(" The library has been successfully saved in the file LibraryData \n" );
+         System.out.println(" The warehouse has been successfully saved in the file DatabaseData \n" );
        } else {
          System.out.println(" There has been an error in saving \n" );
        }
@@ -127,6 +127,4 @@ public class WhContext {
   public static void main (String[] args){
     WhContext.instance().process(); 
   }
-
-
 }

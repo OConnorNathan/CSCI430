@@ -143,6 +143,27 @@ public class Database implements Serializable {
     }
     return clientBalances;
   }
+
+  public String getClientWaits(int clientID){
+    Product tempp;
+    Wait tempw;
+    String returnString = "";
+    Iterator<Product> products = inventory.getProducts();
+    while(products.hasNext()){
+      tempp = products.next();
+      Iterator<Wait> waits = tempp.getWaits();
+      while(waits.hasNext()){
+        tempw = waits.next();
+        if(tempw.getCID() == clientID){
+          returnString += tempp.getPID() + " ";
+          returnString += tempw.toString();
+        }
+      }
+      
+    }
+
+    return returnString;
+  }
   
   /* PRIMARY BUSINESS PROCESSES */
 
